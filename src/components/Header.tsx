@@ -106,14 +106,14 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             )}
 
-            {/* Reset Button (Zweifache Sicherheit) */}
+            {/* Reset Button (Zweifache Sicherheit - Rot gestaltet) */}
             {onOpenResetModal && (
               <button
                 onClick={onOpenResetModal}
-                className="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-300 hover:border-rose-300 flex items-center gap-1.5 transition cursor-pointer"
+                className="px-3 py-1.5 rounded-xl text-xs font-black bg-rose-600 hover:bg-rose-700 text-white border border-rose-700 shadow-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
                 title="Eingaben & Fortschritt zurücksetzen (mit zweifacher Sicherheit)"
               >
-                <RotateCcw className="w-3.5 h-3.5 text-slate-500 hover:text-rose-600" />
+                <RotateCcw className="w-3.5 h-3.5 text-white" />
                 <span className="hidden sm:inline">Reset</span>
               </button>
             )}

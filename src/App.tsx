@@ -25,6 +25,7 @@ export default function App() {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false);
   const [showAchievementToast, setShowAchievementToast] = useState<string | null>(null);
+  const [gesetzesbuchNotification, setGesetzesbuchNotification] = useState<string | null>(null);
 
   // Register service worker for offline support
   useEffect(() => {
@@ -103,6 +104,17 @@ export default function App() {
     if (phaseId === 6) {
       setIsCompletionModalOpen(true);
     }
+
+    // Trigger Gesetzesbuch Unlock Notification
+    const chapterTitles: Record<number, string> = {
+      1: 'Kapitel 1: Die 4 Rechtsinstrumente',
+      2: 'Kapitel 2: Selbsterfahrung & Erstellungshilfen',
+      3: 'Kapitel 3: Tandem-Vergleich der Erstellungshilfen',
+      4: 'Kapitel 4: Rechtlicher Rahmen & BGH WENN-DANN Formel',
+      5: 'Kapitel 5: Eigen-Check & Akut-Notfall-Stresstest',
+      6: 'Kapitel 6: Rechts-Konsil – Alle 6 Praxisfälle & BGH-Musterlösungen',
+    };
+    setGesetzesbuchNotification(chapterTitles[phaseId] || `Kapitel ${phaseId}`);
 
     confetti({
       particleCount: 90,
@@ -286,8 +298,10 @@ export default function App() {
           <Phase6LegalConsil
             cases={data.cases}
             teacherMode={data.teacherMode}
+            fullData={data}
             onUpdateCase={handleUpdateCase}
             onPrint={() => setIsPrintModalOpen(true)}
+            onSelectPhase={handleSelectPhase}
             onCompleteTraining={() => handleCompletePhase(6)}
           />
         )}
@@ -299,6 +313,42 @@ export default function App() {
           <WifiOff className="w-4 h-4 text-amber-600 animate-pulse" />
           <div className="text-xs">
             <span className="font-bold">Offline-Modus aktiv:</span> Eingaben werden lokal auf diesem Gerät gespeichert.
+          </div>
+        </div>
+      )}
+
+      {/* Gesetzesbuch Unlock Toast Notification */}
+      {gesetzesbuchNotification && (
+        <div className="fixed bottom-5 left-5 z-50 bg-gradient-to-r from-amber-500 via-emerald-600 to-blue-600 text-white p-4 rounded-2xl shadow-2xl border-2 border-white/50 flex items-center justify-between gap-4 animate-in slide-in-from-bottom-4 duration-300">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-black text-xl shrink-0">
+              📖
+            </div>
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-wider text-amber-200">
+                Gesetzesbuch Aktualisiert!
+              </div>
+              <div className="text-xs sm:text-sm font-bold">
+                Freigeschaltet: {gesetzesbuchNotification}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => {
+                setGesetzesbuchNotification(null);
+                setIsPrintModalOpen(true);
+              }}
+              className="px-3.5 py-1.5 rounded-xl bg-white text-slate-950 font-black text-xs shadow-md hover:bg-amber-100 transition cursor-pointer"
+            >
+              Jetzt im Gesetzbuch lesen ➔
+            </button>
+            <button
+              onClick={() => setGesetzesbuchNotification(null)}
+              className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/20 transition cursor-pointer"
+            >
+              ✕
+            </button>
           </div>
         </div>
       )}

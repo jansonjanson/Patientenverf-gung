@@ -12,10 +12,10 @@ interface Phase2SelfExperienceProps {
   onNextPhase: () => void;
 }
 
-const PRESET_COMBINATIONS = [
-  'Person A: Verbraucherzentrale („Selbstbestimmt“) & Person B: BMJV-Textbausteine (PDF)',
-  'Person A: Esslinger Initiative (Formular) & Person B: BMJV-Textbausteine (PDF)',
-  'Tandem: Beide haben Verbraucherzentrale & BMJV verglichen',
+const PRESET_OPTIONS = [
+  'Online-Generator: Verbraucherzentrale („Selbstbestimmt“)',
+  'Online-Generator: Esslinger Initiative (Online-Formular)',
+  'Formulierungshilfen: Offizielle BMJV-Textbausteine (PDF)',
 ];
 
 export const Phase2SelfExperience: React.FC<Phase2SelfExperienceProps> = ({
@@ -26,7 +26,7 @@ export const Phase2SelfExperience: React.FC<Phase2SelfExperienceProps> = ({
   onUpdateField,
   onNextPhase,
 }) => {
-  const [isCustomTool, setIsCustomTool] = useState(!PRESET_COMBINATIONS.includes(toolsChosen) && Boolean(toolsChosen));
+  const [isCustomTool, setIsCustomTool] = useState(!PRESET_OPTIONS.includes(toolsChosen) && Boolean(toolsChosen));
 
   const handleSelectPreset = (selectedVal: string) => {
     if (selectedVal === 'custom') {
@@ -262,10 +262,10 @@ export const Phase2SelfExperience: React.FC<Phase2SelfExperienceProps> = ({
           </p>
         </div>
 
-        {/* Input Field 1: Auswahlbox / Dropdown für gewählte Generatoren */}
+        {/* Input Field 1: Auswahlbox / Dropdown für gewählte Erstellungshilfe */}
         <div className="space-y-3 bg-slate-50 p-5 rounded-2xl border border-slate-200">
           <label className="block text-sm font-extrabold text-slate-900">
-            1. Welche Erstellungshilfen hat Ihr Tandem verwendet? (Dropdown-Auswahl)
+            1. Welche Erstellungshilfe haben Sie für Ihre Verfügung verwendet? (Dropdown-Auswahl)
           </label>
 
           <select
@@ -273,13 +273,13 @@ export const Phase2SelfExperience: React.FC<Phase2SelfExperienceProps> = ({
             onChange={(e) => handleSelectPreset(e.target.value)}
             className="w-full px-4 py-3 rounded-2xl bg-white border-2 border-blue-200 text-sm sm:text-base text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-2xs"
           >
-            <option value="" disabled>-- Bitte wählen Sie Ihre Tandem-Kombination aus --</option>
-            {PRESET_COMBINATIONS.map((preset) => (
-              <option key={preset} value={preset}>
-                {preset}
+            <option value="" disabled>-- Bitte wählen Sie Ihre Erstellungshilfe aus --</option>
+            {PRESET_OPTIONS.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
               </option>
             ))}
-            <option value="custom">✏️ Andere Kombination / Eigene Freitext-Angabe...</option>
+            <option value="custom">✏️ Andere Erstellungshilfe / Eigene Freitext-Angabe...</option>
           </select>
 
           {isCustomTool && (
@@ -287,7 +287,7 @@ export const Phase2SelfExperience: React.FC<Phase2SelfExperienceProps> = ({
               type="text"
               value={toolsChosen}
               onChange={(e) => onUpdateField('toolsChosen', e.target.value)}
-              placeholder="Geben Sie hier Ihre individuelle Tandem-Kombination ein..."
+              placeholder="Geben Sie hier Ihre gewählte Erstellungshilfe ein..."
               className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 font-medium animate-in fade-in"
             />
           )}

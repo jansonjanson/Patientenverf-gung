@@ -115,41 +115,45 @@ export const Phase5SelfCheck: React.FC<Phase5SelfCheckProps> = ({
             <span>Prüf-Checkliste nach Großkopf & Klein (2019a, 2019b):</span>
           </h4>
 
+          {/* Item 1: WENN-Prüfung (AMBER THEME) */}
           <div
             onClick={() => handleToggle('checklistSelf1', chk1)}
             className={`p-5 rounded-2xl border-2 cursor-pointer transition flex items-start gap-4 ${
               chk1
-                ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950 shadow-2xs'
-                : 'bg-slate-50/80 border-slate-200 hover:border-slate-300 text-slate-800'
+                ? 'bg-amber-100 border-amber-400 text-amber-950 shadow-md ring-2 ring-amber-200'
+                : 'bg-amber-50/80 border-amber-300 hover:border-amber-400 text-slate-900'
             }`}
           >
             <input
               type="checkbox"
               checked={chk1}
               onChange={() => {}}
-              className="mt-1 w-5 h-5 rounded text-blue-600 border-slate-300 pointer-events-none shrink-0"
+              className="mt-1 w-5 h-5 rounded text-amber-600 border-amber-400 pointer-events-none shrink-0"
             />
             <div className="text-sm sm:text-base leading-relaxed font-medium">
-              <strong className="text-slate-950 font-bold">1. WENN-Prüfung:</strong> Ist der medizinische Krankheitszustand eindeutig und ohne Interpretationsspielraum benannt (keine vagen Begriffe wie „schwer krank“ oder „nicht mehr lebenswert“)?
+              <strong className="text-amber-950 font-extrabold block mb-0.5">1. WENN-Prüfung (Krankheitszustand):</strong>
+              Ist der medizinische Krankheitszustand eindeutig und ohne Interpretationsspielraum benannt (keine vagen Begriffe wie „schwer krank“ oder „nicht mehr lebenswert“)?
             </div>
           </div>
 
+          {/* Item 2: DANN-Prüfung (EMERALD THEME) */}
           <div
             onClick={() => handleToggle('checklistSelf2', chk2)}
             className={`p-5 rounded-2xl border-2 cursor-pointer transition flex items-start gap-4 ${
               chk2
-                ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950 shadow-2xs'
-                : 'bg-slate-50/80 border-slate-200 hover:border-slate-300 text-slate-800'
+                ? 'bg-emerald-100 border-emerald-400 text-emerald-950 shadow-md ring-2 ring-emerald-200'
+                : 'bg-emerald-50/80 border-emerald-300 hover:border-emerald-400 text-slate-900'
             }`}
           >
             <input
               type="checkbox"
               checked={chk2}
               onChange={() => {}}
-              className="mt-1 w-5 h-5 rounded text-blue-600 border-slate-300 pointer-events-none shrink-0"
+              className="mt-1 w-5 h-5 rounded text-emerald-600 border-emerald-400 pointer-events-none shrink-0"
             />
             <div className="text-sm sm:text-base leading-relaxed font-medium">
-              <strong className="text-slate-950 font-bold">2. DANN-Prüfung:</strong> Sind die gewünschten oder abgelehnten ärztlichen und pflegerischen Maßnahmen konkret benannt (z. B. künstliche Beatmung, künstliche Ernährung/PEG, Dialyse, Reanimation, palliative Symptomlinderung)?
+              <strong className="text-emerald-950 font-extrabold block mb-0.5">2. DANN-Prüfung (Medizinische Maßnahme):</strong>
+              Sind die gewünschten oder abgelehnten ärztlichen und pflegerischen Maßnahmen konkret benannt (z. B. künstliche Beatmung, künstliche Ernährung/PEG, Dialyse, Reanimation, palliative Symptomlinderung)?
             </div>
           </div>
         </div>

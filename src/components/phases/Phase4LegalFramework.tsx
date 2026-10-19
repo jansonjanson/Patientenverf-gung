@@ -77,7 +77,7 @@ export const Phase4LegalFramework: React.FC<Phase4LegalFrameworkProps> = ({ onNe
       <StepTransition
         stepNumber="2"
         title="Die WENN-DANN-Formel als verbindlichen Prozess verstehen"
-        hint="Pulsierender Kausalitäts-Flow: Behandlungszustand ➔ Rechtsfolge"
+        hint="Juristische WENN-DANN-Logik: Behandlungszustand ➔ Rechtsfolge"
         variant="amber"
       />
 

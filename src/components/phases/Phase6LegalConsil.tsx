@@ -11,30 +11,38 @@ import {
   Wrench,
   MessageSquareQuote,
   Zap,
+  Sparkles,
 } from 'lucide-react';
-import { CASES_DATA, evaluateCaseFormulation } from '../../utils/legal-learning';
-import { CaseState } from '../../hooks/useClassroomSync';
+import { CASES_DATA, evaluateCaseFormulation, analyzeClauseQuality } from '../../utils/legal-learning';
+import { CaseState, ClassroomData } from '../../hooks/useClassroomSync';
 import { CaseAnalysisMatrixPhase6 } from '../diagrams/CaseAnalysisMatrixPhase6';
 import { StepTransition } from '../StepTransition';
 import { SaveExportBar } from '../SaveExportBar';
+import { InteractiveClauseBuilderModal } from '../InteractiveClauseBuilderModal';
+import { CompetenceBadgesShowcase } from '../CompetenceBadgesShowcase';
 
 interface Phase6LegalConsilProps {
   cases: Record<number, CaseState>;
   teacherMode: boolean;
+  fullData?: ClassroomData;
   onUpdateCase: (id: number, updater: Partial<CaseState>) => void;
   onPrint: () => void;
+  onSelectPhase?: (phaseId: number) => void;
   onCompleteTraining?: () => void;
 }
 
 export const Phase6LegalConsil: React.FC<Phase6LegalConsilProps> = ({
   cases,
   teacherMode,
+  fullData,
   onUpdateCase,
   onPrint,
+  onSelectPhase,
   onCompleteTraining,
 }) => {
   const [lockedHintCaseId, setLockedHintCaseId] = useState<number | null>(null);
   const [focusedCaseIndex, setFocusedCaseIndex] = useState<number>(0);
+  const [builderCaseId, setBuilderCaseId] = useState<number | null>(null);
   const completedCasesCount = Object.values(cases).filter((c) => c.completed).length;
 
   const handleSelectCase = (index: number) => {
@@ -324,14 +332,25 @@ export const Phase6LegalConsil: React.FC<Phase6LegalConsilProps> = ({
                 id={`case_${c.id}_repair_section`}
                 className="space-y-4 bg-slate-50/90 p-5 sm:p-6 rounded-2xl border-2 border-slate-200"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="text-xs font-black uppercase tracking-wider text-blue-900 flex items-center gap-2">
                     <Wrench className="w-4 h-4 text-blue-600" />
                     <span>3. Ihre Reparatur: BGH-konform formulieren</span>
                   </span>
-                  <span className="text-xs text-slate-600 font-bold">
-                    {evaluation.characterCount} Zeichen getippt
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setBuilderCaseId(c.id)}
+                      className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer no-print"
+                      title="BGH-Formel-Baukasten für fertige Satzbausteine öffnen"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+                      <span>✨ Live-Formel-Baukasten</span>
+                    </button>
+                    <span className="text-xs text-slate-600 font-bold hidden sm:inline">
+                      {evaluation.characterCount} Zeichen
+                    </span>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -367,6 +386,35 @@ export const Phase6LegalConsil: React.FC<Phase6LegalConsilProps> = ({
                     />
                   </div>
                 </div>
+
+                {/* Proposal 3: Instant Keyword-Spotting & Quality Feedback */}
+                {(() => {
+                  const quality = analyzeClauseQuality(state.wenn, state.dann);
+                  return (
+                    (state.wenn.trim().length > 0 || state.dann.trim().length > 0) && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1 animate-in fade-in duration-200">
+                        <div
+                          className={`p-3 rounded-xl border font-semibold flex items-center gap-2 ${
+                            quality.wennScore === 'excellent' || quality.wennScore === 'good'
+                              ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+                              : 'bg-amber-50 border-amber-300 text-amber-900'
+                          }`}
+                        >
+                          <span>{quality.wennTip}</span>
+                        </div>
+                        <div
+                          className={`p-3 rounded-xl border font-semibold flex items-center gap-2 ${
+                            quality.dannScore === 'excellent' || quality.dannScore === 'good'
+                              ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+                              : 'bg-amber-50 border-amber-300 text-amber-900'
+                          }`}
+                        >
+                          <span>{quality.dannTip}</span>
+                        </div>
+                      </div>
+                    )
+                  );
+                })()}
 
                 {/* Merged Sentence Live Preview */}
                 <div className="p-4 rounded-xl bg-white border border-slate-200 text-sm leading-relaxed text-slate-800">
@@ -509,6 +557,25 @@ export const Phase6LegalConsil: React.FC<Phase6LegalConsilProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Micro-Credentials & Competence Badges Showcase (Proposal 1) */}
+      <CompetenceBadgesShowcase
+        data={fullData || { cases, completedPhases: [6] }}
+        onSelectPhase={onSelectPhase}
+      />
+
+      {/* Interactive BGH Live Clause Builder Modal (Proposal 2) */}
+      <InteractiveClauseBuilderModal
+        isOpen={builderCaseId !== null}
+        onClose={() => setBuilderCaseId(null)}
+        caseTitle={builderCaseId ? `Fall ${builderCaseId}` : undefined}
+        onApplyClause={(wenn, dann) => {
+          if (builderCaseId !== null) {
+            handleFieldChange(builderCaseId, 'wenn', wenn);
+            handleFieldChange(builderCaseId, 'dann', dann);
+          }
+        }}
+      />
 
       {/* LITERATURE FOOTER */}
       <div className="bg-slate-100 border border-slate-200 rounded-3xl p-6 text-xs text-slate-600 space-y-2">

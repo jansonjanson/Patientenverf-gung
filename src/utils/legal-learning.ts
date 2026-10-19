@@ -270,3 +270,162 @@ export function computeOverallProgress(data: ClassroomStateSummary): {
     achievements,
   };
 }
+
+/**
+ * Proposal 3: Instant Keyword-Spotting & Quality Feedback for Student Repairs
+ */
+export interface ClauseQualityAnalysis {
+  wennScore: 'excellent' | 'good' | 'vague' | 'empty';
+  dannScore: 'excellent' | 'good' | 'vague' | 'empty';
+  wennKeywordsFound: string[];
+  dannKeywordsFound: string[];
+  wennTip: string;
+  dannTip: string;
+}
+
+export function analyzeClauseQuality(wennText: string, dannText: string): ClauseQualityAnalysis {
+  const w = (wennText || '').toLowerCase().trim();
+  const d = (dannText || '').toLowerCase().trim();
+
+  // WENN Keywords (specific disease / condition)
+  const wennKeyList = [
+    'endstadium', 'unheilbar', 'koma', 'demenz', 'fortgeschritten',
+    'tödlich', 'irreversibel', 'sterbeprozess', 'aussichtslos',
+    'hirnschädigung', 'versagen', 'tumor', 'metastasen', 'schwerer',
+    'krankheit', 'leiden', 'erledigt', 'als', 'copd'
+  ];
+  const wennFound = wennKeyList.filter((k) => w.includes(k));
+
+  // DANN Keywords (specific medical measures / interventions)
+  const dannKeyList = [
+    'beatmung', 'ernährung', 'peg', 'dialyse', 'reanimation',
+    'palliative', 'schmerztherapie', 'einstellung', 'einstellen',
+    'unterlassen', 'schmerzlinderung', 'sedierung', 'ablehnen',
+    'verzichten', 'übernahme', 'katheter', 'operation', 'eingriff',
+    'lebensverlängernd', 'flüssigkeit'
+  ];
+  const dannFound = dannKeyList.filter((k) => d.includes(k));
+
+  let wennScore: 'excellent' | 'good' | 'vague' | 'empty' = 'empty';
+  let wennTip = 'Geben Sie einen spezifischen Krankheitszustand an (WENN).';
+  if (w.length >= 15 && wennFound.length >= 2) {
+    wennScore = 'excellent';
+    wennTip = '🟢 Perfekt! Konkreter Krankheitszustand / Diagnose eindeutig benannt.';
+  } else if (w.length >= 8 && wennFound.length >= 1) {
+    wennScore = 'good';
+    wennTip = '🟢 Gut! Krankheitszustand erkannt. (Ergänzen Sie ggf. BGH-Details).';
+  } else if (w.length > 0) {
+    wennScore = 'vague';
+    wennTip = '🟡 Vage / unbestimmt – Tipp: Verwenden Sie präzise Diagnosen wie „Endstadium einer unheilbaren Erkrankung“ oder „irreversibles Koma“.';
+  }
+
+  let dannScore: 'excellent' | 'good' | 'vague' | 'empty' = 'empty';
+  let dannTip = 'Spezifizieren Sie die konkrete medizinische Maßnahme (DANN).';
+  if (d.length >= 15 && dannFound.length >= 2) {
+    dannScore = 'excellent';
+    dannTip = '🟢 Perfekt! Medizinische Maßnahmen (z. B. Beatmung, PEG, Palliative Care) unmissverständlich geregelt.';
+  } else if (d.length >= 8 && dannFound.length >= 1) {
+    dannScore = 'good';
+    dannTip = '🟢 Gut! Medizinische Maßnahme genannt.';
+  } else if (d.length > 0) {
+    dannScore = 'vague';
+    dannTip = '🟡 Unkonkret – Tipp: Benennen Sie explizit Heileingriffe wie „künstliche Beatmung“, „Sondenernährung (PEG)“, „Dialyse“ oder „Palliative Schmerztherapie“.';
+  }
+
+  return {
+    wennScore,
+    dannScore,
+    wennKeywordsFound: wennFound,
+    dannKeywordsFound: dannFound,
+    wennTip,
+    dannTip,
+  };
+}
+
+/**
+ * Proposal 1: Adaptive Competence Badges & Micro-Credentials
+ */
+export interface CompetenceBadge {
+  id: string;
+  title: string;
+  subtitle: string;
+  icon: string;
+  color: string;
+  unlocked: boolean;
+  phaseId: number;
+}
+
+export function getCompetenceBadges(data: any): CompetenceBadge[] {
+  const completedPhases: number[] = data?.completedPhases || [];
+
+  return [
+    {
+      id: 'b1',
+      title: 'Rechtsbegriffe-Expert:in',
+      subtitle: 'Alle 4 Vorsorgeinstrumente fehlerfrei im Quiz zugeordnet',
+      icon: '🎓',
+      color: 'from-blue-600 to-indigo-600',
+      unlocked: completedPhases.includes(1) || (data?.quizSubmitted && data?.quizScore === 4),
+      phaseId: 1,
+    },
+    {
+      id: 'b2',
+      title: 'Perspektiven-Pionier:in',
+      subtitle: 'Eigenen Verfügungstext erprobt & Stolpersteine dokumentiert',
+      icon: '📑',
+      color: 'from-sky-600 to-emerald-600',
+      unlocked: completedPhases.includes(2) || Boolean((data?.ownPvSentences || '').trim().length > 10),
+      phaseId: 2,
+    },
+    {
+      id: 'b3',
+      title: 'System-Analytiker:in',
+      subtitle: 'Tandem-Vergleich anhand der 4 Leitfragen abgeschlossen',
+      icon: '⚖️',
+      color: 'from-indigo-600 to-purple-600',
+      unlocked:
+        completedPhases.includes(3) ||
+        [data?.comparisonQ1, data?.comparisonQ2, data?.comparisonQ3, data?.comparisonQ4].filter(
+          (a) => (a || '').trim().length > 5
+        ).length >= 3,
+      phaseId: 3,
+    },
+    {
+      id: 'b4',
+      title: 'BGH-Prüfingenieur:in',
+      subtitle: '6 Voraussetzungen & Eigen-Check Stresstest absolviert',
+      icon: '🛡️',
+      color: 'from-amber-500 to-emerald-600',
+      unlocked:
+        completedPhases.includes(4) ||
+        completedPhases.includes(5) ||
+        Boolean((data?.selfCheckReflection || '').trim().length > 10),
+      phaseId: 5,
+    },
+    {
+      id: 'b5',
+      title: 'Klausel-Mechaniker:in',
+      subtitle: 'Gebrauchsuntaugliche Patientenverfügungen BGH-konform repariert',
+      icon: '🛠️',
+      color: 'from-violet-600 to-purple-600',
+      unlocked:
+        completedPhases.includes(6) ||
+        Object.values(data?.cases || {}).filter(
+          (c: any) => c.completed || (c.wenn && c.dann)
+        ).length >= 3,
+      phaseId: 6,
+    },
+    {
+      id: 'b6',
+      title: 'Palliative Care Rechtsexpert:in',
+      subtitle: 'Gesamtes Schulungsmodul Patientenverfügung & Strafrecht I gemeistert',
+      icon: '🏆',
+      color: 'from-amber-400 via-emerald-500 to-blue-600',
+      unlocked:
+        completedPhases.length >= 6 ||
+        Object.values(data?.cases || {}).filter((c: any) => c.completed).length === 6,
+      phaseId: 6,
+    },
+  ];
+}
+

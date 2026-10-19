@@ -202,10 +202,10 @@ export const LegalChecklistFlowPhase4: React.FC = () => {
             <span className="text-slate-500 text-xs font-semibold">{current.sub}</span>
             <button
               onClick={handleNextReq}
-              className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-2xs active:scale-95 cursor-pointer no-print"
+              className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-1.5 transition shadow-lg shadow-amber-400/40 border-2 border-amber-300 animate-pulse active:scale-95 cursor-pointer no-print"
             >
-              <span>Nächstes Kriterium</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>Nächstes Kriterium ➔</span>
+              <ArrowRight className="w-4 h-4 text-slate-950" />
             </button>
           </div>
         </div>
@@ -240,53 +240,37 @@ export const LegalChecklistFlowPhase4: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {/* WENN Node */}
-          <button
-            type="button"
-            onClick={() => setActiveFormulaPart('wenn')}
-            className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
-              activeFormulaPart === 'wenn'
-                ? 'border-amber-500 bg-white shadow-md ring-2 ring-amber-200'
-                : 'border-slate-200 bg-white/80 hover:border-slate-300'
-            }`}
-          >
+          {/* WENN Node - STATICALLY COLORED AMBER */}
+          <div className="p-4.5 rounded-2xl border-2 border-amber-400 bg-amber-50/90 shadow-sm text-left">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-black uppercase text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-lg border border-amber-300">
+              <span className="text-xs font-black uppercase text-amber-950 bg-amber-200/90 px-2.5 py-0.5 rounded-lg border border-amber-300">
                 1. WENN (Glied)
               </span>
-              <span className="text-2xs text-slate-500 font-medium">Behandlungszustand</span>
+              <span className="text-2xs text-amber-900 font-bold">Behandlungszustand</span>
             </div>
-            <p className="text-xs font-extrabold text-slate-900 mb-1">
+            <p className="text-xs font-extrabold text-amber-950 mb-1">
               Bezug auf ein konkretes Krankheitsbild
             </p>
-            <p className="text-xs text-slate-600 leading-relaxed font-medium">
+            <p className="text-xs text-slate-800 leading-relaxed font-medium">
               Muss medizinisch klar abgrenzbar sein (z. B. unheilbare terminale Erkrankung, irreversibles Koma, schwerste Hirnschädigung).
             </p>
-          </button>
+          </div>
 
-          {/* DANN Node */}
-          <button
-            type="button"
-            onClick={() => setActiveFormulaPart('dann')}
-            className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
-              activeFormulaPart === 'dann'
-                ? 'border-emerald-500 bg-white shadow-md ring-2 ring-emerald-200'
-                : 'border-slate-200 bg-white/80 hover:border-slate-300'
-            }`}
-          >
+          {/* DANN Node - STATICALLY COLORED EMERALD */}
+          <div className="p-4.5 rounded-2xl border-2 border-emerald-400 bg-emerald-50/90 shadow-sm text-left">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-black uppercase text-emerald-900 bg-emerald-100 px-2.5 py-0.5 rounded-lg border border-emerald-300">
+              <span className="text-xs font-black uppercase text-emerald-950 bg-emerald-200/90 px-2.5 py-0.5 rounded-lg border border-emerald-300">
                 2. DANN (Glied)
               </span>
-              <span className="text-2xs text-slate-500 font-medium">Rechtsfolge / Maßnahme</span>
+              <span className="text-2xs text-emerald-900 font-bold">Rechtsfolge / Maßnahme</span>
             </div>
-            <p className="text-xs font-extrabold text-slate-900 mb-1">
+            <p className="text-xs font-extrabold text-emerald-950 mb-1">
               Konkrete Anweisung zu Eingriffen
             </p>
-            <p className="text-xs text-slate-600 leading-relaxed font-medium">
+            <p className="text-xs text-slate-800 leading-relaxed font-medium">
               Im Voraus erklärte (Nicht-)Einwilligung zu Heileingriffen (künstliche Beatmung, PEG/Sondenernährung, Dialyse, Reanimation).
             </p>
-          </button>
+          </div>
         </div>
       </div>
     </div>
