@@ -1,0 +1,6 @@
+{
+  "name": "Guided Classroom: Patientenverfügung – Strafrecht I",
+  "description": "Attraktives, interaktives Classroom-Begleittool für das Modul CE08 U3 Palliative Care III mit Fortschritts-Sync, Offline-Modus und Micro-Interactions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

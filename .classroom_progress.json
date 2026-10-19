@@ -1,0 +1,294 @@
+{
+  "user_l4dgjx7": {
+    "userId": "user_l4dgjx7",
+    "userName": "Teilnehmer:in",
+    "currentPhase": 1,
+    "quizCompleted": true,
+    "quizScore": 4,
+    "casesProgress": {
+      "1": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "2": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "3": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "4": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "5": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "6": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      }
+    },
+    "answers": {
+      "q1": "",
+      "q2": "",
+      "q3": "",
+      "q4": "",
+      "toolsChosen": "",
+      "hesitationPoint": "",
+      "ownPvSentences": "",
+      "selfCheckReflection": ""
+    },
+    "checklists": {
+      "c1": false,
+      "c2": false,
+      "c3": false
+    },
+    "lastUpdated": "2026-10-19T09:17:00.721Z"
+  },
+  "user_6ksyr0r": {
+    "userId": "user_6ksyr0r",
+    "userName": "Teilnehmer:in",
+    "currentPhase": 6,
+    "quizCompleted": false,
+    "quizScore": 0,
+    "casesProgress": {
+      "1": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "2": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "3": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "4": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "5": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "6": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      }
+    },
+    "answers": {
+      "q1": "",
+      "q2": "",
+      "q3": "",
+      "q4": "",
+      "toolsChosen": "",
+      "hesitationPoint": "",
+      "ownPvSentences": "",
+      "selfCheckReflection": ""
+    },
+    "checklists": {
+      "c1": false,
+      "c2": false,
+      "c3": false
+    },
+    "lastUpdated": "2026-10-19T09:17:33.268Z"
+  },
+  "user_16g1ym8": {
+    "userId": "user_16g1ym8",
+    "userName": "Teilnehmer:in",
+    "currentPhase": 6,
+    "quizCompleted": false,
+    "quizScore": 0,
+    "casesProgress": {
+      "1": {
+        "wenn": "Wenn ich an einer unheilbaren tödlich verlaufenden Erkrankung leide",
+        "dann": "lehne ich künstliche Beatmung und Ernährung ab",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": true,
+        "completed": true
+      },
+      "2": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "3": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "4": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "5": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "6": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      }
+    },
+    "answers": {
+      "q1": "",
+      "q2": "",
+      "q3": "",
+      "q4": "",
+      "toolsChosen": "",
+      "hesitationPoint": "",
+      "ownPvSentences": "",
+      "selfCheckReflection": ""
+    },
+    "checklists": {
+      "c1": false,
+      "c2": false,
+      "c3": false
+    },
+    "lastUpdated": "2026-10-19T09:18:31.776Z"
+  },
+  "user_cubr92p": {
+    "userId": "user_cubr92p",
+    "userName": "Teilnehmer:in",
+    "currentPhase": 1,
+    "quizCompleted": false,
+    "quizScore": 0,
+    "casesProgress": {
+      "1": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "2": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "3": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "4": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "5": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      },
+      "6": {
+        "wenn": "",
+        "dann": "",
+        "diagnosis": [],
+        "diagnosisText": "",
+        "isUnlocked": false,
+        "completed": false
+      }
+    },
+    "answers": {
+      "q1": "",
+      "q2": "",
+      "q3": "",
+      "q4": "",
+      "toolsChosen": "",
+      "hesitationPoint": "",
+      "ownPvSentences": "",
+      "selfCheckReflection": ""
+    },
+    "checklists": {
+      "c1": false,
+      "c2": false,
+      "c3": false
+    },
+    "lastUpdated": "2026-10-19T09:19:32.966Z"
+  }
+}

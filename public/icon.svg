@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <!-- Background with safe zone rounded rectangle -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
+  <circle cx="256" cy="256" r="180" fill="white" fill-opacity="0.08" />
+  
+  <!-- Caduceus / Paragraph symbol stylized -->
+  <g filter="url(#shadow)">
+    <!-- Shield Outline -->
+    <path d="M256 90 L380 145 V255 C380 345 325 410 256 435 C187 410 132 345 132 255 V145 Z" fill="#ffffff" fill-opacity="0.15" stroke="#ffffff" stroke-width="8" stroke-linejoin="round"/>
+    
+    <!-- Paragraph Sign § inside shield -->
+    <text x="256" y="295" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="190" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">§</text>
+  </g>
+
+  <!-- Small cross accent -->
+  <path d="M256 125 V145 M246 135 H266" stroke="#38bdf8" stroke-width="6" stroke-linecap="round"/>
+</svg>
