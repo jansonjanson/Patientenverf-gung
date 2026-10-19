@@ -79,10 +79,10 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Phase Intro Banner - Clean and structured */}
-      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col items-start gap-4">
+      {/* Phase Intro Banner - Color-Coded Container */}
+      <div className="bg-gradient-to-br from-blue-50/80 via-slate-50/50 to-white border-2 border-blue-200/90 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col items-start gap-4">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+          <span className="text-xs font-black uppercase tracking-wider text-blue-900 bg-blue-100 border border-blue-300 px-3 py-1 rounded-full">
             Doppelstunde 1 • Phase 1
           </span>
           <span className="text-xs font-semibold text-slate-500">
@@ -107,8 +107,8 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
         variant="blue"
       />
 
-      {/* Video Box */}
-      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+      {/* Video Box - Color-Coded Container */}
+      <div className="bg-gradient-to-br from-red-50/40 via-slate-50/30 to-white border-2 border-red-200/90 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-blue-700">

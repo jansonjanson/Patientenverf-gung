@@ -65,6 +65,7 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
 export interface CaseData {
   id: number;
   title: string;
+  vignette: string;
   quote: string;
   hintQuestion: string;
   officialProblem: string;
@@ -78,7 +79,8 @@ export interface CaseData {
 export const CASES_DATA: CaseData[] = [
   {
     id: 1,
-    title: 'Beispiel 1: „Würdevoll sterben“',
+    title: 'Fall 1: „Würdevoll sterben“',
+    vignette: 'Herr K. (74) leidet an fortgeschrittener ALS (Amyotrophe Lateralsklerose). Er hat Angst vor dem Ersticken und davor, am Ende vollständig gelähmt nur noch durch Maschinen am Leben gehalten zu werden. Er schreibt in seine Verfügung: „Wenn ich einmal sehr krank bin... möchte ich würdevoll sterben.“',
     quote: '„Wenn ich einmal sehr krank und nicht mehr in der Lage bin, ein für mich erträgliches umweltbezogenes Leben zu führen…, dann möchte ich würdevoll sterben.“',
     hintQuestion: 'Prüfen Sie WENN- und DANN-Satzteil auf Bestimmtheit.',
     officialProblem: 'WENN: Fehlende Bestimmtheit hinsichtlich des Krankheitszustandes („sehr krank“, „erträgliches umweltbezogenes Leben“). DANN: Fehlende Bestimmtheit hinsichtlich der Handlung oder des Unterlassens („würdevoll sterben“ sagt nichts darüber aus, welche medizinischen Maßnahmen konkret gewünscht oder abgelehnt werden).',
@@ -87,7 +89,8 @@ export const CASES_DATA: CaseData[] = [
   },
   {
     id: 2,
-    title: 'Beispiel 2: „Ich möchte nicht leiden“',
+    title: 'Fall 2: „Ich möchte nicht leiden.“',
+    vignette: 'Frau S. (82) hat Knochenmetastasen im Endstadium. Sie fürchtet sich extrem vor Schmerzen in der letzten Lebensphase und sagt bei der Beratung: „Schreiben Sie einfach auf: Ich möchte nicht leiden.“',
     quote: '„Ich möchte nicht leiden.“',
     hintQuestion: 'Was bedeutet „leiden“ im klinischen Alltag – und welche Situation/Maßnahme ist gemeint?',
     officialProblem: 'Zu unbestimmt – es ist nicht klar, was „leiden“ bedeutet (körperlich, psychisch, sozial?). Keine spezifische medizinische Situation (WENN) oder konkrete Maßnahme (DANN) genannt.',
@@ -96,7 +99,8 @@ export const CASES_DATA: CaseData[] = [
   },
   {
     id: 3,
-    title: 'Beispiel 3: „Keine lebensverlängernden Maßnahmen“',
+    title: 'Fall 3: „Ich möchte keine lebensverlängernden Maßnahmen.“',
+    vignette: 'Herr L. (50) hat nach einem schweren Herzinfarkt Angst vor dem Wachkoma. Er möchte auf keinen Fall jahrelang beatmet im Bett liegen. In seinem Freitextfeld steht nur der Satz: „Ich möchte keine lebensverlängernden Maßnahmen.“',
     quote: '„Ich möchte keine lebensverlängernden Maßnahmen.“',
     hintQuestion: 'Wann genau soll das gelten? Welche Maßnahmen zählen dazu?',
     officialProblem: 'Zu unbestimmt – Wann (in welchem Krankheitszustand)? Welche konkreten Maßnahmen sind mit „lebensverlängernd“ gemeint?',
@@ -105,7 +109,8 @@ export const CASES_DATA: CaseData[] = [
   },
   {
     id: 4,
-    title: 'Beispiel 4: „Meine Familie soll entscheiden“',
+    title: 'Fall 4: „Meine Familie soll entscheiden.“',
+    vignette: 'Frau M. (60) versteht die juristischen Formulare nicht. Sie vertraut ihrer ältesten Tochter blind und kreuzt auf dem Papier alles durch. Stattdessen notiert sie handschriftlich: „Meine Familie soll entscheiden, was mit mir passiert.“',
     quote: '„Meine Familie soll entscheiden, was mit mir passiert.“',
     hintQuestion: 'Wer genau ist „die Familie“ rechtlich – und was ist der Unterschied zwischen Patientenverfügung und Vorsorgevollmacht?',
     officialProblem: 'Unkonkret – Welche Person genau (Name, Geburtsdatum)? Wann? Was soll entschieden werden? („Die Familie“ hat als Kollektiv kein automatisches Vertretungsrecht).',
@@ -114,7 +119,8 @@ export const CASES_DATA: CaseData[] = [
   },
   {
     id: 5,
-    title: 'Beispiel 5: „Nicht an Schläuche angeschlossen werden“',
+    title: 'Fall 5: „Nicht an Schläuche angeschlossen werden“',
+    vignette: 'Herr P. (70) leidet an schwerer COPD. Nach einem Aufenthalt auf der Intensivstation hat er ein Trauma vor all den Geräten. Er sagt resolut: „Wenn es mit mir zu Ende geht, will ich nicht an Schläuche angeschlossen werden.“',
     quote: '„Ich will nicht an Schläuche angeschlossen werden.“',
     hintQuestion: 'Welche Schläuche gibt es im Krankenhaus – und dienen alle nur der Lebensverlängerung?',
     officialProblem: 'Unkonkret / vage – Welche Schläuche sind gemeint? Infusion zur Schmerzlinderung? Künstliche Beatmung? Ernährungssonde? Blasenkatheter bei Harnverhalt?',
@@ -123,7 +129,8 @@ export const CASES_DATA: CaseData[] = [
   },
   {
     id: 6,
-    title: 'Beispiel 6: „Keine Operation bei schwerer Krankheit“',
+    title: 'Fall 6: „Keine Operation bei schwerer Krankheit.“',
+    vignette: 'Frau T. (88) ist pflegebedürftig und möchte nicht mehr ins Krankenhaus verlegt werden, um dort „aufgeschnitten zu werden“, wie sie sagt. Sie diktiert für die Verfügung: „Wenn ich schwer krank bin, will ich keine Operation.“',
     quote: '„Wenn ich schwer krank bin, will ich keine Operation.“',
     hintQuestion: 'Wann ist man „schwer krank“ – und was ist mit palliativen Operationen zur Schmerzlinderung?',
     officialProblem: '„Schwer krank“ ist nicht präzise genug (fehlende Bestimmtheit des Zustands). Zudem fehlt die Art der Operation: Nicht alle OPs sind lebensverlängernd, manche sind rein schmerzlindernd (z. B. bei Darmverschluss oder pathologischer Fraktur).',

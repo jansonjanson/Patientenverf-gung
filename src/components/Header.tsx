@@ -5,6 +5,8 @@ import {
   ShieldCheck,
   Shield,
   FileText,
+  BookOpen,
+  RotateCcw,
 } from 'lucide-react';
 import { PWAInstallButton } from './PWAInstallButton';
 
@@ -14,6 +16,7 @@ interface HeaderProps {
   isOnline: boolean;
   teacherMode: boolean;
   onOpenTeacherModal: () => void;
+  onOpenResetModal?: () => void;
   onPrint: () => void;
   onExportWord?: () => void;
 }
@@ -23,6 +26,7 @@ export const Header: React.FC<HeaderProps> = ({
   isOnline,
   teacherMode,
   onOpenTeacherModal,
+  onOpenResetModal,
   onPrint,
   onExportWord,
 }) => {
@@ -80,14 +84,14 @@ export const Header: React.FC<HeaderProps> = ({
             {/* PWA Install Button */}
             <PWAInstallButton />
 
-            {/* Print / PDF Button */}
+            {/* Digitales Gesetzbuch / PDF Handout Button */}
             <button
               onClick={onPrint}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
-              title="Handout / Dokumentation drucken oder als PDF sichern"
+              className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 shadow-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer border border-amber-300"
+              title="Komplettes Gesetzbuch & Schulungshandout mit allen Wissensinhalten und Video-Links öffnen"
             >
-              <Printer className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">PDF / Druck</span>
+              <BookOpen className="w-3.5 h-3.5 text-slate-950" />
+              <span className="hidden sm:inline font-black">Gesetzbuch</span>
             </button>
 
             {/* Word (.doc) Export Button */}
@@ -99,6 +103,18 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <FileText className="w-3.5 h-3.5" />
                 <span className="hidden md:inline">Word (.doc)</span>
+              </button>
+            )}
+
+            {/* Reset Button (Zweifache Sicherheit) */}
+            {onOpenResetModal && (
+              <button
+                onClick={onOpenResetModal}
+                className="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-300 hover:border-rose-300 flex items-center gap-1.5 transition cursor-pointer"
+                title="Eingaben & Fortschritt zurücksetzen (mit zweifacher Sicherheit)"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-slate-500 hover:text-rose-600" />
+                <span className="hidden sm:inline">Reset</span>
               </button>
             )}
 

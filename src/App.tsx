@@ -10,6 +10,8 @@ import { Phase5SelfCheck } from './components/phases/Phase5SelfCheck';
 import { Phase6LegalConsil } from './components/phases/Phase6LegalConsil';
 import { TeacherModal } from './components/TeacherModal';
 import { PrintHandoutModal } from './components/PrintHandoutModal';
+import { CompletionSummaryModal } from './components/CompletionSummaryModal';
+import { ResetConfirmationModal } from './components/ResetConfirmationModal';
 import { useClassroomSync, CaseState } from './hooks/useClassroomSync';
 import { computeOverallProgress } from './utils/legal-learning';
 import { exportToWord } from './utils/exportUtils';
@@ -20,6 +22,8 @@ export default function App() {
 
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false);
   const [showAchievementToast, setShowAchievementToast] = useState<string | null>(null);
 
   // Register service worker for offline support
@@ -95,6 +99,10 @@ export default function App() {
       completedPhases: nextCompleted,
       currentPhase: nextPhase,
     });
+
+    if (phaseId === 6) {
+      setIsCompletionModalOpen(true);
+    }
 
     confetti({
       particleCount: 90,
@@ -209,6 +217,7 @@ export default function App() {
         isOnline={isOnline}
         teacherMode={data.teacherMode}
         onOpenTeacherModal={() => setIsTeacherModalOpen(true)}
+        onOpenResetModal={() => setIsResetModalOpen(true)}
         onPrint={() => setIsPrintModalOpen(true)}
         onExportWord={handleExportAllToWord}
       />
@@ -323,6 +332,21 @@ export default function App() {
         isOpen={isPrintModalOpen}
         onClose={() => setIsPrintModalOpen(false)}
         data={data}
+      />
+
+      {/* Reset Confirmation Modal (Double Security) */}
+      <ResetConfirmationModal
+        isOpen={isResetModalOpen}
+        onClose={() => setIsResetModalOpen(false)}
+        onConfirmReset={resetAll}
+      />
+
+      {/* Completion Summary Pop-up Modal */}
+      <CompletionSummaryModal
+        isOpen={isCompletionModalOpen}
+        onClose={() => setIsCompletionModalOpen(false)}
+        data={data}
+        onOpenGesetzbuch={() => setIsPrintModalOpen(true)}
       />
     </div>
   );

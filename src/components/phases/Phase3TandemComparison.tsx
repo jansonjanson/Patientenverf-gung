@@ -25,7 +25,7 @@ export const Phase3TandemComparison: React.FC<Phase3TandemComparisonProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Phase Intro Banner */}
-      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col items-start gap-4">
+      <div className="bg-gradient-to-br from-indigo-50/90 via-purple-50/30 to-slate-50 border-2 border-indigo-300/90 rounded-3xl p-6 sm:p-8 shadow-md flex flex-col items-start gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
             Doppelstunde 1 • Phase 3
@@ -55,7 +55,7 @@ export const Phase3TandemComparison: React.FC<Phase3TandemComparisonProps> = ({
       {/* The 4 Questions Grid Container */}
       <div className="space-y-6">
         {/* Step Header with Integrated "Didaktische Impulse" Button */}
-        <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-gradient-to-br from-purple-50/90 via-indigo-50/40 to-slate-50 border-2 border-purple-200/90 rounded-3xl p-6 sm:p-7 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
               Schritt 1 • Tandem-Auswertung

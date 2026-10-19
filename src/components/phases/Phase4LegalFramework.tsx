@@ -26,7 +26,7 @@ export const Phase4LegalFramework: React.FC<Phase4LegalFrameworkProps> = ({ onNe
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Phase Intro Banner */}
-      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col items-start gap-4">
+      <div className="bg-gradient-to-br from-amber-50/90 via-indigo-50/30 to-slate-50 border-2 border-amber-300/90 rounded-3xl p-6 sm:p-8 shadow-md flex flex-col items-start gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-black uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
             Doppelstunde 2 • Phase 4
@@ -69,138 +69,8 @@ export const Phase4LegalFramework: React.FC<Phase4LegalFrameworkProps> = ({ onNe
           </span>
         </div>
 
-        {/* Didaktisches Schaubild: Die 6 Voraussetzungen & WENN-DANN-Formel */}
+        {/* Didaktisches Schaubild: Die 6 Voraussetzungen nach Großkopf & Klein */}
         <LegalChecklistFlowPhase4 />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {/* Voraussetzung 1 */}
-          <div className="bg-gradient-to-br from-blue-50/70 via-slate-50/30 to-white border-2 border-blue-300 hover:border-blue-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-blue-800 uppercase tracking-wider bg-blue-100 px-3 py-1 rounded-xl border border-blue-200">
-                  Voraussetzung 01
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs">
-                  Zentral!
-                </span>
-              </div>
-              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
-                Einwilligungsfähigkeit ausreichend
-              </h4>
-              <p className="text-xs sm:text-sm text-blue-900 font-bold">
-                Volljährigkeit & Vollbesitz geistiger Kräfte
-              </p>
-              <div className="space-y-2 text-sm text-slate-800 bg-white/90 p-4 rounded-2xl border border-blue-100 shadow-2xs font-medium">
-                <p>
-                  <strong className="text-blue-950">1. Einsichtsfähig:</strong> Versteht Art, Bedeutung und Konsequenzen der Maßnahme.
-                </p>
-                <p>
-                  <strong className="text-blue-950">2. Urteilsfähig:</strong> Kann Vor- und Nachteile sowie mögliche Alternativen abwägen.
-                </p>
-                <p>
-                  <strong className="text-blue-950">3. Freie Willensbildung:</strong> Kann ohne äußeren Druck eine Entscheidung treffen.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Voraussetzung 2 */}
-          <div className="bg-gradient-to-br from-emerald-50/70 via-slate-50/30 to-white border-2 border-emerald-300 hover:border-emerald-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3.5">
-              <span className="inline-block text-xs font-black text-emerald-800 uppercase tracking-wider bg-emerald-100 px-3 py-1 rounded-xl border border-emerald-200">
-                Voraussetzung 02
-              </span>
-              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
-                Schriftlich verfasst & eigenhändig unterschrieben
-              </h4>
-              <p className="text-sm text-slate-700 leading-relaxed font-medium">
-                Die Verfügung muss zwingend in Schriftform verfasst und persönlich unterschrieben sein.
-              </p>
-              <div className="p-3.5 rounded-2xl bg-emerald-100/80 border border-emerald-300 text-sm font-bold text-emerald-950 flex items-start gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
-                <span>Wichtiger Zusatz: Notarielle Beglaubigung ist <u>nicht</u> notwendig!</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Voraussetzung 3 */}
-          <div className="bg-gradient-to-br from-amber-50/70 via-slate-50/30 to-white border-2 border-amber-300 hover:border-amber-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3.5">
-              <span className="inline-block text-xs font-black text-amber-900 uppercase tracking-wider bg-amber-100 px-3 py-1 rounded-xl border border-amber-200">
-                Voraussetzung 03
-              </span>
-              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
-                Unwiderrufen zum Behandlungszeitpunkt
-              </h4>
-              <p className="text-sm text-slate-700 leading-relaxed font-medium">
-                Der Verfasser darf die Verfügung nicht zwischenzeitlich (auch formlos oder mündlich) widerrufen haben.
-              </p>
-              <div className="p-3.5 rounded-2xl bg-amber-100/80 border border-amber-300 text-sm text-amber-950 leading-relaxed font-medium">
-                <strong>Rechtsfolge:</strong> Auch ein nonverbaler Abwehrwille in der Behandlungssituation bricht die frühere schriftliche Verfügung!
-              </div>
-            </div>
-          </div>
-
-          {/* Voraussetzung 4 */}
-          <div className="bg-gradient-to-br from-indigo-50/70 via-slate-50/30 to-white border-2 border-indigo-300 hover:border-indigo-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-indigo-900 uppercase tracking-wider bg-indigo-100 px-3 py-1 rounded-xl border border-indigo-200">
-                  Voraussetzung 04
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-indigo-600 text-white shadow-2xs">
-                  BGH-Fokus!
-                </span>
-              </div>
-              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
-                Konkrete Festlegungen (Bestimmtheitsgebot)
-              </h4>
-              <p className="text-sm text-slate-700 leading-relaxed font-medium">
-                Konkrete Festlegungen über die <strong>Einwilligung oder Nichteinwilligung</strong> in bestimmte, noch nicht unmittelbar bevorstehende ärztliche Eingriffe.
-              </p>
-              <div className="p-3.5 rounded-2xl bg-indigo-100/80 border border-indigo-300 text-sm text-indigo-950 leading-relaxed font-medium">
-                <strong>BGH-Urteil (BGH XII ZB 61/16):</strong> Pauschale Floskeln wie „keine Schläuche“ oder „in Würde sterben“ genügen <u>nicht</u>!
-              </div>
-            </div>
-          </div>
-
-          {/* Voraussetzung 5 */}
-          <div className="bg-gradient-to-br from-teal-50/70 via-slate-50/30 to-white border-2 border-teal-300 hover:border-teal-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3.5">
-              <span className="inline-block text-xs font-black text-teal-900 uppercase tracking-wider bg-teal-100 px-3 py-1 rounded-xl border border-teal-200">
-                Voraussetzung 05
-              </span>
-              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
-                Akuter Eintritt der Entscheidungsunfähigkeit
-              </h4>
-              <p className="text-sm text-slate-700 leading-relaxed font-medium">
-                Der Verfasser ist zum maßgeblichen Behandlungszeitpunkt nicht in der Lage, seinen Willen wirksam zu äußern.
-              </p>
-              <div className="p-3.5 rounded-2xl bg-teal-100/80 border border-teal-300 text-sm text-teal-950 leading-relaxed font-medium">
-                <strong>Grundsatz:</strong> Solange der Patient ansprechbar und einsichtsfähig ist, gilt stets sein tagesaktueller mündlicher Wille.
-              </div>
-            </div>
-          </div>
-
-          {/* Voraussetzung 6 */}
-          <div className="bg-gradient-to-br from-rose-50/70 via-slate-50/30 to-white border-2 border-rose-300 hover:border-rose-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3.5">
-              <span className="inline-block text-xs font-black text-rose-900 uppercase tracking-wider bg-rose-100 px-3 py-1 rounded-xl border border-rose-200">
-                Voraussetzung 06
-              </span>
-              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
-                Keine Sittenwidrigkeit
-              </h4>
-              <p className="text-sm text-slate-700 leading-relaxed font-medium">
-                Die Anordnungen dürfen nicht gegen das Gesetz oder die guten Sitten verstoßen.
-              </p>
-              <div className="p-3.5 rounded-2xl bg-rose-100/80 border border-rose-300 text-sm font-bold text-rose-950 flex items-start gap-2.5">
-                <ShieldAlert className="w-5 h-5 text-rose-700 shrink-0 mt-0.5" />
-                <span>Verboten: z. B. keine aktiv direkte Sterbehilfe (§ 216 StGB).</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Transition to Step 2 */}

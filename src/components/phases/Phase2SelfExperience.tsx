@@ -41,7 +41,7 @@ export const Phase2SelfExperience: React.FC<Phase2SelfExperienceProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Phase Intro Banner */}
-      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col items-start gap-4">
+      <div className="bg-gradient-to-br from-emerald-50/90 via-slate-50/50 to-white border-2 border-emerald-300/90 rounded-3xl p-6 sm:p-8 shadow-md flex flex-col items-start gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
             Doppelstunde 1 • Phase 2
@@ -77,7 +77,7 @@ export const Phase2SelfExperience: React.FC<Phase2SelfExperienceProps> = ({
       />
 
       {/* Tool Selection (Clear 2-Column Split for Person A and Person B) */}
-      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="bg-gradient-to-br from-blue-50/80 via-indigo-50/30 to-white border-2 border-blue-200/90 rounded-3xl p-6 sm:p-8 shadow-md space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
@@ -249,7 +249,7 @@ export const Phase2SelfExperience: React.FC<Phase2SelfExperienceProps> = ({
       />
 
       {/* Begleitendes Stolperstein-Protokoll */}
-      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="bg-gradient-to-br from-sky-50/90 via-teal-50/30 to-slate-50 border-2 border-sky-300/90 rounded-3xl p-6 sm:p-8 shadow-md space-y-6">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
             Schritt 2 • Begleit-Notizen während der Erstellung

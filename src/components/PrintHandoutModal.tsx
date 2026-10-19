@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Printer, CheckCircle2, FileText, Scale, BookOpen, ShieldCheck } from 'lucide-react';
+import { X, Printer, CheckCircle2, FileText, Scale, BookOpen, ShieldCheck, Play, ExternalLink, Video, Lock, Sparkles } from 'lucide-react';
 import { ClassroomData } from '../hooks/useClassroomSync';
 import { CASES_DATA } from '../utils/legal-learning';
 
@@ -12,365 +12,316 @@ interface PrintHandoutModalProps {
 export const PrintHandoutModal: React.FC<PrintHandoutModalProps> = ({ isOpen, onClose, data }) => {
   if (!isOpen) return null;
 
+  const completed = data.completedPhases || [];
+  const isTeacher = Boolean(data.teacherMode);
+
+  // Progressive unlock criteria per section:
+  // Chapter 1: Unlocked on start or completion of Phase 1
+  const isP1Unlocked = isTeacher || completed.includes(1) || data.currentPhase >= 1;
+  // Chapter 2: Unlocked when Phase 2 is completed or active after Phase 1
+  const isP2Unlocked = isTeacher || completed.includes(2) || (completed.includes(1) && Boolean(data.toolsChosen || data.hesitationPoint));
+  // Chapter 3: Unlocked when Phase 3 is completed or active after Phase 2
+  const isP3Unlocked = isTeacher || completed.includes(3) || (completed.includes(2) && Boolean(data.comparisonQ1));
+  // Chapter 4: Unlocked when Phase 4 (Rechtsrahmen) is reached or completed
+  const isP4Unlocked = isTeacher || completed.includes(4) || (completed.includes(3) && data.currentPhase >= 4);
+  // Chapter 5: Unlocked when Phase 5 (Eigen-Check) is completed or active
+  const isP5Unlocked = isTeacher || completed.includes(5) || (completed.includes(4) && Boolean(data.selfCheckReflection));
+  // Chapter 6: Unlocked when Phase 6 (Rechts-Konsil) is reached or completed
+  const isP6Unlocked = isTeacher || completed.includes(6) || (completed.includes(5) && data.currentPhase >= 6);
+
+  const unlockedCount = [isP1Unlocked, isP2Unlocked, isP3Unlocked, isP4Unlocked, isP5Unlocked, isP6Unlocked].filter(Boolean).length;
+
+  const cleanQuote = (q: string) => (q || '').replace(/^[„"]|[“"]$/g, '').trim();
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-      <div className="bg-white text-slate-900 rounded-3xl max-w-4xl w-full p-6 sm:p-10 shadow-2xl space-y-6 my-8 max-h-[90vh] overflow-y-auto">
-        {/* Modal Controls (Hidden in print) */}
-        <div className="flex items-center justify-between border-b pb-4 no-print">
+      <div className="bg-white text-slate-900 rounded-3xl max-w-4xl w-full p-6 sm:p-10 shadow-2xl space-y-8 my-8 max-h-[90vh] overflow-y-auto">
+        {/* Modal Controls */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4 no-print">
           <div>
-            <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <Printer className="w-5 h-5 text-blue-600" />
-              Lernskript & Handout (Druck- / PDF-Vorschau)
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2.5">
+              <BookOpen className="w-6 h-6 text-amber-500" />
+              <span>Digitales Gesetzbuch & Schulungshandout</span>
             </h3>
-            <p className="text-xs text-slate-500">
-              Vollständiges Lern- und Ergebnisprotokoll inklusive aller Theorietexte, Ihrer persönlichen Eingaben und der Musterlösungen.
+            <p className="text-xs sm:text-sm text-slate-600 mt-0.5 font-medium">
+              Freischalt-Status: <strong className="text-amber-900 font-extrabold">{unlockedCount} von 6 Kapiteln freigeschaltet</strong> (wächst mit Ihrem Trainingsfortschritt)
             </p>
           </div>
-          <div className="flex items-center gap-2">
+
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => window.print()}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5 cursor-pointer"
             >
               <Printer className="w-4 h-4" />
-              <span>Drucken / PDF</span>
+              <span>Drucken / PDF speichern</span>
             </button>
-            <button
-              onClick={() => {
-                import('../utils/exportUtils').then(({ exportToWord }) => {
-                  exportToWord({
-                    title: 'Lernskript & Handout: Patientenverfügung – Strafrecht I',
-                    subtitle: 'Palliative Care III (CE08 U3) • Dozent: J. Rosenow • Literaturbasis: Großkopf & Klein',
-                    sections: [
-                      {
-                        heading: '1. Theorie-Übersicht: Die 4 Rechtsinstrumente',
-                        content: {
-                          '01a Betreuungsverfügung': 'Gerichtliche Anordnung; Vertretungsrecht des Betreuers erstreckt sich nicht auf den gesamten Rechtskreis. Nachrangig zu Vollmachten.',
-                          '01b Vorsorgevollmacht': 'Rechtsgeschäftlich; Bevollmächtigter wird zum Vertreter im Willen; Vorrang vor Betreuung (§ 1896 Abs. 2 BGB).',
-                          '01c Ehegatten-Notvertretungsrecht': '§ 1358 BGB seit 01.01.2023; Notfallvertretung für max. 6 Monate im Bereich Gesundheitssorge.',
-                          '01d Patientenverfügung': 'Medizinische Willenserklärung; wirkt aus sich heraus und ist sofort zu achten.',
-                        },
-                      },
-                      {
-                        heading: '2. Selbsterfahrung: Stolperstein-Protokoll',
-                        content: {
-                          'Gewählte Erstellungshilfe': data.toolsChosen || 'Keine Angabe',
-                          'Längster Zögerungspunkt': data.hesitationPoint || 'Keine Angabe',
-                          'Notierte Beispielsätze': data.ownPvSentences || 'Keine Angabe',
-                        },
-                      },
-                      {
-                        heading: '3. Tandem-Vergleich: 4 Leitfragen',
-                        content: {
-                          'Gemeinsamkeiten': data.comparisonQ1 || 'Keine Angabe',
-                          'Unterschiede': data.comparisonQ2 || 'Keine Angabe',
-                          'Was fehlt?': data.comparisonQ3 || 'Keine Angabe',
-                          'Nutzerfragen': data.comparisonQ4 || 'Keine Angabe',
-                        },
-                      },
-                      {
-                        heading: '4. Rechtlicher Rahmen & Stresstest',
-                        content: {
-                          'WENN-Kriterium': data.checklistSelf1 ? 'Erfüllt' : 'Nicht erfüllt',
-                          'DANN-Kriterium': data.checklistSelf2 ? 'Erfüllt' : 'Nicht erfüllt',
-                          'Vorsorgevollmacht kombiniert': data.checklistSelf3 ? 'Erfüllt' : 'Nicht erfüllt',
-                          'Fazit': data.selfCheckReflection || 'Keine Angabe',
-                        },
-                      },
-                      {
-                        heading: '5. Die 6 Praxisfälle (Rechts-Konsil)',
-                        content: Object.fromEntries(
-                          CASES_DATA.map((c) => [
-                            `Fall ${c.id}: ${c.title}`,
-                            `WENN: ${data.cases[c.id]?.wenn || '-'} | DANN: ${data.cases[c.id]?.dann || '-'} | Musterlösung: ${c.officialSolution}`,
-                          ])
-                        ),
-                      },
-                    ],
-                  }, 'patientenverfuegung_handout_lernskript.doc');
-                });
-              }}
-              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer"
-            >
-              <FileText className="w-4 h-4" />
-              <span>Word (.doc)</span>
-            </button>
+
             <button
               onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+              className="p-2.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        {/* Printable Document Content */}
-        <div className="space-y-6 text-slate-900 printable-content">
-          {/* Header */}
-          <div className="border-b-2 border-slate-900 pb-4">
-            <div className="flex justify-between items-start">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-blue-800">
-                  CE08 U3 • Palliative Care III • Modulunterlagen
-                </span>
-                <h1 className="text-2xl font-black mt-0.5 text-slate-950">
-                  Patientenverfügung – Strafrecht I (Guided Classroom)
-                </h1>
-                <p className="text-xs text-slate-600 mt-1">
-                  Dozent: J. Rosenow (M.A. Pflegepädagogik) • Literaturbasis: Großkopf & Klein (2019a, 2019b)
-                </p>
-              </div>
-              <div className="text-right text-xs text-slate-500 shrink-0">
-                <div>Datum: {new Date().toLocaleDateString('de-DE')}</div>
-                <div className="font-semibold text-slate-800 mt-0.5">Teilnehmer-ID: {data.userId}</div>
-                <div className="text-[10px] text-emerald-700 font-bold mt-0.5">✓ Lokal gesichert</div>
-              </div>
-            </div>
-          </div>
-
-          {/* THEORIE-ÜBERSICHT 1: 4 VERFÜGUNGSARTEN */}
-          <div className="space-y-3 border-b pb-5 print-break-inside">
+        {/* PRINTABLE COMPENDIUM CONTENT */}
+        <div className="space-y-8 text-slate-900 font-sans">
+          {/* Document Header */}
+          <div className="border-b-2 border-slate-900 pb-6 space-y-2">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-extrabold uppercase tracking-wider text-blue-900">
-                1. Theorie-Übersicht: Die 4 Instrumente im juristischen Vergleich
-              </h2>
-              <span className="text-[11px] text-slate-500">Großkopf & Klein (2019a, 2019b)</span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-              {/* Betreuungsverfügung */}
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-                <div className="font-bold text-indigo-900">01a • Betreuungsverfügung (Gerichtliche Anordnung)</div>
-                <p className="text-slate-700 italic">
-                  „Mit der Anordnung entsteht lediglich ein Vertretungsrecht für den Betreuer, das sich nicht auf den gesamten Rechtskreis erstreckt.“
-                </p>
-                <p className="text-slate-600">
-                  • Rechte des Betroffenen bleiben ungeschmälert; Geschäfts- und Einsichtsfähigkeit bleiben bestehen.<br />
-                  • <strong>Nachrangigkeit:</strong> Existiert bereits eine ausreichende Bevollmächtigung, ist keine Betreuung möglich.
-                </p>
-              </div>
-
-              {/* Vorsorgevollmacht */}
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-                <div className="font-bold text-blue-900">01b • Vorsorgevollmacht (Rechtsgeschäftlich)</div>
-                <p className="text-slate-700 italic">
-                  „Bevollmächtigt eine Person, im Falle einer Notsituation alle oder bestimmte Aufgaben für den Vollmachtgeber zu erledigen.“
-                </p>
-                <p className="text-slate-600">
-                  • Der Bevollmächtigte wird zum <strong>Vertreter im Willen</strong> (entscheidet an Stelle des Vollmachtgebers).<br />
-                  • <strong>Vorrang vor Betreuung:</strong> § 1896 Abs. 2 Satz 2 BGB.
-                </p>
-              </div>
-
-              {/* Notvertretungsrecht Eheleute */}
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-                <div className="font-bold text-amber-900">01c • Vertretungsrecht Eheleute (§ 1358 BGB)</div>
-                <p className="text-slate-600">
-                  • <strong>Seit 01.01.2023</strong> gesetzlich geregelt bei Bewusstlosigkeit/akuter Krankheit im Bereich Gesundheitssorge.<br />
-                  • Schweigepflicht gegenüber vertretendem Ehegatten aufgehoben.<br />
-                  • <strong>Befristung:</strong> Maximal <strong>6 Monate</strong> gültig.<br />
-                  • <strong>Ausschluss:</strong> Gilt nicht bei Getrenntleben oder wenn bereits eine andere Verfügung/Vollmacht greift.
-                </p>
-              </div>
-
-              {/* Patientenverfügung */}
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-                <div className="font-bold text-emerald-900">01d • Patientenverfügung (Medizinische Willenserklärung)</div>
-                <p className="text-slate-700 italic">
-                  „Schriftliche Verfügung einer erwachsenen Person über zu ergreifende bzw. zu unterlassende medizinische Maßnahmen für den Fall, dass sie ihren Willen nicht mehr wirksam erklären kann.“
-                </p>
-                <p className="text-emerald-800 font-semibold">
-                  ⚡ <strong>„Wirkt aus sich heraus“:</strong> Sobald von ihrer Existenz Kenntnis erlangt wurde, ist sie sofort und ohne nachzufragen zu achten!
-                </p>
-              </div>
-            </div>
-
-            {/* Quiz Result */}
-            <div className="p-2.5 bg-blue-50/80 rounded-xl border border-blue-200 text-xs flex justify-between items-center">
-              <span><strong>Ergebnis Präzisions-Check (4 Zuordnungen):</strong></span>
-              <span className="font-bold text-blue-900">
-                {data.quizSubmitted ? `${data.quizScore} von 4 Punkten erzielt` : 'Noch nicht eingereicht'}
+              <span className="text-xs font-black uppercase tracking-wider text-blue-800 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full">
+                Digitales Gesetzbuch & Schulungshandout
+              </span>
+              <span className="text-xs font-semibold text-slate-500">
+                Stand: {new Date().toLocaleDateString('de-DE')}
               </span>
             </div>
-          </div>
-
-          {/* PRAXISTEIL 2: SELBSTERFAHRUNG & STOLPERSTEIN-PROTOKOLL */}
-          <div className="space-y-2 border-b pb-4 print-break-inside">
-            <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-800">
-              2. Selbsterfahrung: Erstellung einer Patientenverfügung (Stolperstein-Protokoll)
-            </h2>
-            <div className="text-xs space-y-2">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="p-2.5 bg-slate-50 rounded-xl border">
-                  <strong>Gewählte Hilfen/Generatoren:</strong> {data.toolsChosen || '–'}
-                </div>
-                <div className="p-2.5 bg-slate-50 rounded-xl border">
-                  <strong>Längster Zögerungspunkt bei Erstellung:</strong> {data.hesitationPoint || '–'}
-                </div>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                <strong>Exemplarische Klausel aus Ihrer erstellten Verfügung (Transfer für Stresstest):</strong>
-                <p className="italic text-slate-800 mt-1">
-                  {data.ownPvSentences ? `„${data.ownPvSentences}“` : 'Keine Sätze notiert.'}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* PRAXISTEIL 3: SYSTEMATISCHER VERGLEICH */}
-          <div className="space-y-2 border-b pb-4 print-break-inside">
-            <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-800">
-              3. Systematischer Vergleich der Erstellungshilfen (Tandem-Arbeit)
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-              <div className="p-3 bg-slate-50 rounded-xl border">
-                <strong>1. Was gleicht sich / überschneidet sich?</strong>
-                <p className="text-slate-700 mt-1">{data.comparisonQ1 || '–'}</p>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-xl border">
-                <strong>2. Was ist anders / unterschiedlich?</strong>
-                <p className="text-slate-700 mt-1">{data.comparisonQ2 || '–'}</p>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-xl border">
-                <strong>3. Was fehlt? Was müsste ergänzt werden?</strong>
-                <p className="text-slate-700 mt-1">{data.comparisonQ3 || '–'}</p>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-xl border">
-                <strong>4. Welche Fragen ergeben sich als Nutzer:in?</strong>
-                <p className="text-slate-700 mt-1">{data.comparisonQ4 || '–'}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* THEORIE-ÜBERSICHT 2: 6 VORAUSSETZUNGEN & WENN-DANN */}
-          <div className="space-y-3 border-b pb-5 print-break-inside">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-extrabold uppercase tracking-wider text-blue-900">
-                4. Theorie-Übersicht: Voraussetzungen & Wenn-Dann-Formulierung
-              </h2>
-              <span className="text-[11px] text-slate-500">Großkopf & Klein (2019a, 2019b)</span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
-              <div className="p-2.5 bg-slate-50 rounded-xl border">
-                <strong>1. Einwilligungsfähigkeit:</strong><br />
-                • Einsichtsfähig (versteht Art/Folgen)<br />
-                • Urteilsfähig (wägt Alternativen ab)<br />
-                • Freie Willensbildung (ohne Zwang)
-              </div>
-              <div className="p-2.5 bg-slate-50 rounded-xl border">
-                <strong>2. Schriftform:</strong><br />
-                Schriftlich & eigenhändig unterschrieben.<br />
-                <em>(Notarielle Beglaubigung nicht notwendig!)</em>
-              </div>
-              <div className="p-2.5 bg-slate-50 rounded-xl border">
-                <strong>3. Erklärung im Voraus:</strong><br />
-                Verbindliche (Nicht-)Einwilligung. Keine bloßen unverbindlichen Behandlungswünsche.
-              </div>
-              <div className="p-2.5 bg-slate-50 rounded-xl border">
-                <strong>4. Bestimmtheit:</strong><br />
-                Bestimmtheit des Zustands (WENN) und der Maßnahme/des Unterlassens (DANN).
-              </div>
-              <div className="p-2.5 bg-slate-50 rounded-xl border">
-                <strong>5. Keine Willensänderung:</strong><br />
-                Keine Anhaltspunkte, dass der Wille sich geändert hat (jederzeit formlos widerrufbar).
-              </div>
-              <div className="p-2.5 bg-slate-50 rounded-xl border">
-                <strong>6. Keine Sittenwidrigkeit:</strong><br />
-                Kein Verstoß gegen Gesetze (z. B. keine aktive direkte Sterbehilfe § 216 StGB).
-              </div>
-            </div>
-
-            <div className="p-3 bg-blue-50/70 rounded-xl border border-blue-200 text-xs">
-              <strong>Die juristische Kernformel:</strong><br />
-              <span className="text-amber-900 font-bold">WENN (Bestimmtheit des Behandlungszustandes):</span> Muss sich auf ein bestimmtes behandlungsbedürftiges Krankheitsbild bzw. einen bestimmten Krankheitszustand beziehen.<br />
-              <span className="text-emerald-900 font-bold">➔ DANN (Bestimmtheit des Handelns/Unterlassens):</span> Im Voraus erklärte Einwilligung/Ablehnung zu ärztlichen/pflegerischen Maßnahmen.
-            </div>
-          </div>
-
-          {/* PRAXISTEIL 5: EIGEN-CHECK */}
-          <div className="space-y-2 border-b pb-4 print-break-inside">
-            <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-800">
-              5. Eigen-Check der erstellten Verfügung
-            </h2>
-            <div className="text-xs space-y-1 bg-slate-50 p-3 rounded-xl border">
-              <div className="flex items-center gap-2">
-                <span>{data.checklistSelf1 ? '☑' : '☐'}</span>
-                <span><strong>WENN-Prüfung:</strong> Krankheitszustand eindeutig und bestimmt benannt</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span>{data.checklistSelf2 ? '☑' : '☐'}</span>
-                <span><strong>DANN-Prüfung:</strong> Konkrete ärztliche und pflegerische Maßnahmen benannt</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span>{data.checklistSelf3 ? '☑' : '☐'}</span>
-                <span><strong>Kombination mit Vorsorgevollmacht:</strong> Vertretungsperson zur Durchsetzung geregelt</span>
-              </div>
-              {data.selfCheckReflection && (
-                <div className="mt-2 pt-2 border-t text-slate-700">
-                  <strong>Ihr persönliches Fazit zum Generator:</strong> {data.selfCheckReflection}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* PRAXISTEIL 6: RECHTS-KONSIL (ALLE 6 FÄLLE GEGENÜBERGESTELLT) */}
-          <div className="space-y-3 print-break-inside">
-            <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-800">
-              6. Rechts-Konsil: Gegenüberstellung aller 6 Fälle mit Ihren Formulierungen & Musterlösungen
-            </h2>
-
-            <div className="space-y-3">
-              {CASES_DATA.map((c) => {
-                const caseState = data.cases[c.id];
-                const wenn = caseState?.wenn?.trim();
-                const dann = caseState?.dann?.trim();
-                const diagText = caseState?.diagnosisText?.trim();
-
-                return (
-                  <div key={c.id} className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-2 print-break-inside">
-                    <div className="font-bold text-slate-900 flex justify-between items-center border-b pb-1.5">
-                      <span className="text-blue-900 font-extrabold">{c.title}</span>
-                      <span className="text-slate-500 font-normal">Fallakte {c.id}</span>
-                    </div>
-
-                    <div className="text-rose-900 bg-rose-50/70 p-2 rounded-lg border border-rose-200">
-                      <strong>Fehlerhafter Originalsatz:</strong> {c.quote}<br />
-                      <strong>Diagnostizierter Mangel:</strong> {c.officialProblem}
-                      {diagText && <div className="mt-1 text-slate-600"><em>Ihre Anmerkung:</em> {diagText}</div>}
-                    </div>
-
-                    <div className="bg-white p-2.5 rounded-lg border border-blue-200 text-blue-950">
-                      <strong>Ihre Formulierung der TN (WENN – DANN):</strong>
-                      <p className="mt-0.5 italic font-medium">
-                        {wenn || dann ? `„${wenn} ${dann}“` : 'Noch nicht formuliert'}
-                      </p>
-                    </div>
-
-                    <div className="text-emerald-950 bg-emerald-50/90 p-2.5 rounded-lg border border-emerald-300">
-                      <strong>Juristische Muster-Verbesserung (J. Rosenow):</strong>
-                      <p className="mt-0.5 font-semibold">{c.officialSolution}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* PRAXIS-TRANSFER BOX */}
-          <div className="p-4 bg-blue-50/60 rounded-xl border border-blue-200 text-xs space-y-1.5 print-break-inside">
-            <h3 className="font-bold text-blue-950 uppercase tracking-wide">
-              Praxis-Transfer: Was passiert rechtlich, wenn eine Verfügung im Ernstfall zu unbestimmt ist?
-            </h3>
-            <p className="text-slate-700 leading-relaxed">
-              Wenn eine Formulierung das Bestimmtheitsgebot verfehlt, ist das Dokument nicht wertlos – die Aussagen dienen dann als wichtige Anhaltspunkte für die Ermittlung der Behandlungswünsche bzw. des mutmaßlichen Willens, den Bevollmächtigte (Vorsorgevollmacht) oder Betreuer:innen (Betreuungsverfügung) gemeinsam mit dem Behandlungsteam umsetzen müssen (§ 1827 Abs. 2 BGB).
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-950">
+              Patientenverfügung & Strafrecht I (Palliative Care III • CE08 U3)
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-700 font-medium">
+              Geprüftes Schulungsdokument • Dozentur Palliative Care • Literaturbasis: Großkopf & Klein (2019a, 2019b)
             </p>
           </div>
 
-          {/* LITERATURVERZEICHNIS */}
-          <div className="text-[11px] text-slate-500 pt-3 border-t">
-            <strong>Literaturverzeichnis:</strong><br />
-            • Großkopf, V. & Klein, H. (2019a). <em>Recht in Medizin und Pflege.</em> (5. Aufl.). Balingen: Spitta GmbH.<br />
-            • Großkopf, V. & Klein, H. (2019b). <em>Vorschriften und Gesetze für das Gesundheitswesen: inkl. Heilkundeübertragungsrichtlinie.</em> (3. Aufl.). Balingen: Spitta GmbH.
+          {/* SECTION 0: VIDEO IMPULS LINK & INFORMATION */}
+          <div className="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black uppercase tracking-wider text-red-700 flex items-center gap-2">
+                <Video className="w-4 h-4 text-red-600" />
+                <span>0. Fachvideo & Erklär-Impuls</span>
+              </span>
+              <a
+                href={data.customVideoUrl || 'https://youtu.be/Vh1T5booFvY?si=wLR32cqG4ojV-hsW'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-bold text-red-700 hover:underline flex items-center gap-1"
+              >
+                <span>Video auf YouTube öffnen</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed">
+              <strong>Titel:</strong> Vorsorgevollmacht, Betreuungsverfügung, Patientenverfügung: Was ist der Unterschied?
+            </p>
+            <p className="text-xs text-slate-600">
+              <strong>Direkt-URL:</strong> {data.customVideoUrl || 'https://youtu.be/Vh1T5booFvY?si=wLR32cqG4ojV-hsW'}
+            </p>
+          </div>
+
+          {/* SECTION 1: DIE 4 RECHTSINSTRUMENTE (Freigeschaltet ab Phase 1) */}
+          <div className="space-y-3">
+            <h2 className="text-lg font-black text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+              <Scale className="w-5 h-5 text-blue-600" />
+              <span>1. Gesetzliche Grundbegriffe: Die 4 Rechtsinstrumente im Vergleich</span>
+            </h2>
+
+            {isP1Unlocked ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+                <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-200 space-y-1.5">
+                  <h3 className="font-extrabold text-blue-950 text-base">01a. Patientenverfügung (§ 1827 BGB)</h3>
+                  <p className="text-slate-800 font-medium leading-relaxed">
+                    Schriftliche Willenserklärung für künftige Entscheidungsunfähigkeit. Wirkt unmittelbar <em>aus sich heraus</em> gegenüber Ärzt:innen und Pflegenden, sobald von ihr Kenntnis erlangt wurde.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200 space-y-1.5">
+                  <h3 className="font-extrabold text-indigo-950 text-base">01b. Vorsorgevollmacht (§ 164 ff. BGB)</h3>
+                  <p className="text-slate-800 font-medium leading-relaxed">
+                    Bevollmächtigt eine Vertrauensperson zum <em>Vertreter im Willen</em>. Hat gesetzlichen Vorrang vor einer gerichtlichen Betreuung (§ 1896 Abs. 2 BGB).
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-1.5">
+                  <h3 className="font-extrabold text-amber-950 text-base">01c. Betreuungsverfügung (§ 1896 BGB)</h3>
+                  <p className="text-slate-800 font-medium leading-relaxed">
+                    Wunsch an das Betreuungsgericht zur Auswahl des Betreuers. Rechte sowie Geschäfts- und Einsichtsfähigkeit des Betroffenen bleiben voll bestehen.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-1.5">
+                  <h3 className="font-extrabold text-emerald-950 text-base">01d. Ehegatten-Notvertretung (§ 1358 BGB)</h3>
+                  <p className="text-slate-800 font-medium leading-relaxed">
+                    Seit 01.01.2023 gesetzliches Notvertretungsrecht bei akuter Bewusstlosigkeit/Krankheit für maximal 6 Monate im Bereich der Gesundheitssorge.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="p-5 rounded-2xl bg-slate-100 border-2 border-slate-300 text-slate-500 text-xs font-bold flex items-center gap-3">
+                <Lock className="w-5 h-5 text-slate-400" />
+                <span>Kapitel 1 noch nicht freigeschaltet. Absolvieren Sie Phase 1 im Training.</span>
+              </div>
+            )}
+          </div>
+
+          {/* SECTION 2: SELBSTERFAHRUNG (Freigeschaltet ab Phase 2) */}
+          <div className="space-y-3">
+            <h2 className="text-lg font-black text-slate-900 border-b border-slate-200 pb-2">
+              2. Selbsterfahrung & Erstellungshilfen (Stolperstein-Protokoll)
+            </h2>
+
+            {isP2Unlocked ? (
+              <div className="space-y-3 text-xs sm:text-sm bg-emerald-50/50 p-5 rounded-2xl border border-emerald-200">
+                <div>
+                  <strong className="text-slate-900 block font-bold">Verwendete Erstellungshilfen:</strong>
+                  <p className="text-slate-800 bg-white p-2.5 rounded-xl border border-emerald-200 font-medium">
+                    {data.toolsChosen || 'Keine Angabe'}
+                  </p>
+                </div>
+
+                <div>
+                  <strong className="text-slate-900 block font-bold">Längster Zögerungspunkt bei der Erstellung:</strong>
+                  <p className="text-slate-800 bg-white p-2.5 rounded-xl border border-emerald-200 font-medium">
+                    {data.hesitationPoint || 'Keine Angabe'}
+                  </p>
+                </div>
+
+                <div>
+                  <strong className="text-slate-900 block font-bold">Erprobte Beispielklausel aus Ihrer Verfügung:</strong>
+                  <p className="text-slate-950 italic bg-white p-3 rounded-xl border border-emerald-200 font-bold">
+                    „{cleanQuote(data.ownPvSentences) || 'Keine Eingabe erfasst'}“
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="p-5 rounded-2xl bg-slate-100 border-2 border-slate-300 text-slate-500 text-xs font-bold flex items-center gap-3">
+                <Lock className="w-5 h-5 text-slate-400" />
+                <span>Kapitel 2 noch nicht freigeschaltet. Absolvieren Sie Phase 2 im Training.</span>
+              </div>
+            )}
+          </div>
+
+          {/* SECTION 3: DIE 6 VORAUSSETZUNGEN (Freigeschaltet ab Phase 4) */}
+          <div className="space-y-3">
+            <h2 className="text-lg font-black text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-emerald-600" />
+              <span>3. Die 6 Voraussetzungen einer bindenden Patientenverfügung (Großkopf & Klein)</span>
+            </h2>
+
+            {isP4Unlocked ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <strong className="text-slate-950 block font-black">1. Einwilligungsfähigkeit ausreichend:</strong>
+                  <p className="text-slate-700">Volljährigkeit, Einsichtsfähigkeit, Urteilsfähigkeit und freie Willensbildung.</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <strong className="text-slate-950 block font-black">2. Schriftlich verfasst & unterschrieben:</strong>
+                  <p className="text-slate-700">Schriftformzwang nach § 1827 BGB; notarielle Beglaubigung ist rechtlich nicht notwendig.</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <strong className="text-slate-950 block font-black">3. Erklärung im Voraus:</strong>
+                  <p className="text-slate-700">Rechtsverbindliche Erklärung der (Nicht-)Einwilligung für Fälle künftiger Entscheidungsunfähigkeit.</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <strong className="text-slate-950 block font-black">4. Bestimmtheit (WENN-DANN-Logik):</strong>
+                  <p className="text-slate-700">Genaue Angabe des Krankheitszustandes (WENN) und der konkreten Heileingriffe (DANN).</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <strong className="text-slate-950 block font-black">5. Keine Willensänderung / Widerruf:</strong>
+                  <p className="text-slate-700">Erklärung darf nicht widerrufen worden sein; geäußerter Abwehrwille bricht jede schriftliche Verfügung.</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <strong className="text-slate-950 block font-black">6. Keine Sittenwidrigkeit / Straftat:</strong>
+                  <p className="text-slate-700">Kein Verstoß gegen Rechtsverbote (z. B. Verlangen nach aktiver direkter Sterbehilfe, § 216 StGB).</p>
+                </div>
+              </div>
+            ) : (
+              <div className="p-5 rounded-2xl bg-slate-100 border-2 border-slate-300 text-slate-500 text-xs font-bold flex items-center gap-3">
+                <Lock className="w-5 h-5 text-slate-400" />
+                <span>Kapitel 3 noch nicht freigeschaltet. Absolvieren Sie Phase 4 im Training.</span>
+              </div>
+            )}
+          </div>
+
+          {/* SECTION 4: EIGEN-CHECK (Freigeschaltet ab Phase 5) */}
+          <div className="space-y-3 bg-amber-50/50 p-5 rounded-2xl border-2 border-amber-200">
+            <h2 className="text-base font-black text-amber-950 border-b border-amber-200 pb-2">
+              4. Eigen-Check & Stresstest Ihrer Klausel
+            </h2>
+
+            {isP5Unlocked ? (
+              <div className="space-y-3 text-xs sm:text-sm">
+                <div>
+                  <strong className="text-slate-900 block font-bold">Detail-Auswertung Ihrer Klausel (Positives, Lücken & Ergänzungen):</strong>
+                  <p className="text-slate-800 bg-white p-3 rounded-xl border border-amber-200 font-medium leading-relaxed">
+                    {data.selfCheckReflection || 'Keine Angabe'}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="p-4 rounded-xl bg-white/80 border border-amber-300 text-slate-500 text-xs font-bold flex items-center gap-3">
+                <Lock className="w-5 h-5 text-slate-400" />
+                <span>Kapitel 4 noch nicht freigeschaltet. Absolvieren Sie Phase 5 im Training.</span>
+              </div>
+            )}
+          </div>
+
+          {/* SECTION 5: DIE 6 RECHTS-KONSIL FÄLLE (Freigeschaltet ab Phase 6) */}
+          <div className="space-y-3">
+            <h2 className="text-lg font-black text-slate-900 border-b border-slate-200 pb-2">
+              5. Die 6 Praxisfälle des Rechts-Konsils (Musterlösungen & Schülerreparaturen)
+            </h2>
+
+            {isP6Unlocked ? (
+              <div className="space-y-4 text-xs">
+                {CASES_DATA.map((c) => {
+                  const caseState = data.cases[c.id];
+                  const isCaseDone = isTeacher || Boolean(caseState?.completed || caseState?.isUnlocked);
+
+                  return (
+                    <div key={c.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                      <div className="font-extrabold text-slate-900 text-sm flex items-center justify-between">
+                        <span>Fall {c.id}: {c.title}</span>
+                        <span className="text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200 text-2xs">
+                          {(caseState?.diagnosis || []).join(', ') || 'Analysiert'}
+                        </span>
+                      </div>
+
+                      <p className="italic text-rose-950 font-semibold bg-rose-50/70 p-2.5 rounded-lg border border-rose-200">
+                        Problemklausel: „{cleanQuote(c.quote)}“
+                      </p>
+
+                      {(caseState?.wenn || caseState?.dann) && (
+                        <div className="bg-blue-50/80 p-2.5 rounded-lg border border-blue-200 font-medium">
+                          <strong>Ihre BGH-konforme Reparatur: </strong>
+                          <span className="italic">„{caseState.wenn?.trim()} {caseState.dann?.trim()}“</span>
+                        </div>
+                      )}
+
+                      {isCaseDone ? (
+                        <div className="bg-emerald-50/80 p-2.5 rounded-lg border border-emerald-200 font-medium">
+                          <strong>Offizielle Musterlösung (Großkopf & Klein): </strong>
+                          <span className="italic">„{cleanQuote(c.officialSolution)}“</span>
+                        </div>
+                      ) : (
+                        <div className="p-2.5 rounded-lg bg-slate-200/80 border border-slate-300 text-slate-600 font-bold flex items-center gap-2 text-2xs">
+                          <Lock className="w-3.5 h-3.5 text-slate-500" />
+                          <span>Musterlösung gesperrt – formulieren Sie zuerst Fall {c.id} im Rechts-Konsil aus.</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="p-5 rounded-2xl bg-slate-100 border-2 border-slate-300 text-slate-500 text-xs font-bold flex items-center gap-3">
+                <Lock className="w-5 h-5 text-slate-400" />
+                <span>Kapitel 5 noch nicht freigeschaltet. Absolvieren Sie Phase 6 im Rechts-Konsil.</span>
+              </div>
+            )}
+          </div>
+
+          {/* FOOTER */}
+          <div className="pt-4 border-t text-2xs text-slate-500 text-center space-y-1">
+            <p>Guided Classroom: Patientenverfügung & Strafrecht I • Dozentur Palliative Care III (CE08 U3)</p>
+            <p>Literaturbasis: Großkopf, V. & Klein, H. (2019a, 2019b) • BGH-Beschlüsse XII ZB 61/16 & XII ZB 107/17</p>
           </div>
         </div>
       </div>

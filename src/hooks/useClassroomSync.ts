@@ -3,6 +3,8 @@ import { useState, useEffect, useCallback } from 'react';
 export interface CaseState {
   wenn: string;
   dann: string;
+  wennReason?: string;
+  dannReason?: string;
   diagnosis: string[];
   diagnosisText: string;
   isUnlocked: boolean;
@@ -45,12 +47,12 @@ export interface ClassroomData {
 }
 
 const DEFAULT_CASES: Record<number, CaseState> = {
-  1: { wenn: '', dann: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
-  2: { wenn: '', dann: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
-  3: { wenn: '', dann: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
-  4: { wenn: '', dann: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
-  5: { wenn: '', dann: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
-  6: { wenn: '', dann: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
+  1: { wenn: '', dann: '', wennReason: '', dannReason: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
+  2: { wenn: '', dann: '', wennReason: '', dannReason: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
+  3: { wenn: '', dann: '', wennReason: '', dannReason: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
+  4: { wenn: '', dann: '', wennReason: '', dannReason: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
+  5: { wenn: '', dann: '', wennReason: '', dannReason: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
+  6: { wenn: '', dann: '', wennReason: '', dannReason: '', diagnosis: [], diagnosisText: '', isUnlocked: false, completed: false },
 };
 
 const DEFAULT_STATE: ClassroomData = {

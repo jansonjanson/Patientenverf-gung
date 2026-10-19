@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { Check, ChevronRight, CheckCircle2, Sparkles } from 'lucide-react';
 
 interface PhaseStepperProps {
   currentPhase: number;
@@ -23,6 +23,9 @@ export const PhaseStepper: React.FC<PhaseStepperProps> = ({
   completedPhases,
   progressPercentage,
 }) => {
+  const isDs1Done = [1, 2, 3].every((id) => completedPhases.includes(id));
+  const isDs2Done = [4, 5, 6].every((id) => completedPhases.includes(id));
+
   return (
     <div className="bg-white border-b border-slate-200 shadow-xs no-print sticky top-[57px] z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
@@ -51,10 +54,24 @@ export const PhaseStepper: React.FC<PhaseStepperProps> = ({
         <div className="overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
           <div className="flex items-center min-w-[780px] gap-2.5">
             {/* DS 1 Section */}
-            <div className="flex items-center gap-1.5 flex-1 bg-slate-50/90 p-1.5 rounded-2xl border border-slate-200">
-              <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-xl bg-blue-100 text-blue-900 border border-blue-300 shrink-0 shadow-2xs">
-                DS 1
+            <div
+              className={`flex items-center gap-1.5 flex-1 p-1.5 rounded-2xl border transition ${
+                isDs1Done
+                  ? 'bg-emerald-50/90 border-emerald-300 shadow-xs ring-1 ring-emerald-200'
+                  : 'bg-slate-50/90 border-slate-200'
+              }`}
+            >
+              <span
+                className={`text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-xl shrink-0 shadow-2xs flex items-center gap-1 ${
+                  isDs1Done
+                    ? 'bg-emerald-600 text-white border border-emerald-500 font-extrabold'
+                    : 'bg-blue-100 text-blue-900 border border-blue-300'
+                }`}
+              >
+                <span>DS 1</span>
+                {isDs1Done && <CheckCircle2 className="w-3.5 h-3.5" />}
               </span>
+
               {PHASES.filter((p) => p.ds === 1).map((phase) => {
                 const isActive = currentPhase === phase.id;
                 const isDone = completedPhases.includes(phase.id);
@@ -69,14 +86,15 @@ export const PhaseStepper: React.FC<PhaseStepperProps> = ({
                         : isActive
                         ? 'bg-blue-600 text-white shadow-md border-2 border-blue-400 ring-2 ring-blue-200'
                         : isDone
-                        ? 'bg-emerald-50/90 text-emerald-950 border-2 border-emerald-300 hover:bg-emerald-100/90 shadow-2xs'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-white border border-transparent font-bold'
+                        ? 'bg-emerald-100/90 text-emerald-950 border-2 border-emerald-400 hover:bg-emerald-200/90 shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-white border border-slate-200 font-bold bg-white/70'
                     }`}
                   >
                     <span className="truncate">{phase.title}</span>
                     {isDone ? (
-                      <span className="flex items-center shrink-0 ml-1 bg-emerald-200/80 text-emerald-900 p-0.5 rounded-full">
-                        <CheckCircle2 className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-emerald-700'}`} />
+                      <span className="flex items-center shrink-0 ml-1.5 bg-emerald-200/90 text-emerald-950 px-1.5 py-0.5 rounded-full text-[10px] font-extrabold border border-emerald-400">
+                        <CheckCircle2 className={`w-3.5 h-3.5 mr-0.5 ${isActive ? 'text-emerald-900' : 'text-emerald-800'}`} />
+                        <span>Erfüllt</span>
                       </span>
                     ) : null}
                   </button>
@@ -87,10 +105,24 @@ export const PhaseStepper: React.FC<PhaseStepperProps> = ({
             <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
 
             {/* DS 2 Section */}
-            <div className="flex items-center gap-1.5 flex-1 bg-slate-50/90 p-1.5 rounded-2xl border border-slate-200">
-              <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-xl bg-indigo-100 text-indigo-900 border border-indigo-300 shrink-0 shadow-2xs">
-                DS 2
+            <div
+              className={`flex items-center gap-1.5 flex-1 p-1.5 rounded-2xl border transition ${
+                isDs2Done
+                  ? 'bg-emerald-50/90 border-emerald-300 shadow-xs ring-1 ring-emerald-200'
+                  : 'bg-slate-50/90 border-slate-200'
+              }`}
+            >
+              <span
+                className={`text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-xl shrink-0 shadow-2xs flex items-center gap-1 ${
+                  isDs2Done
+                    ? 'bg-emerald-600 text-white border border-emerald-500 font-extrabold'
+                    : 'bg-indigo-100 text-indigo-900 border border-indigo-300'
+                }`}
+              >
+                <span>DS 2</span>
+                {isDs2Done && <CheckCircle2 className="w-3.5 h-3.5" />}
               </span>
+
               {PHASES.filter((p) => p.ds === 2).map((phase) => {
                 const isActive = currentPhase === phase.id;
                 const isDone = completedPhases.includes(phase.id);
@@ -105,14 +137,15 @@ export const PhaseStepper: React.FC<PhaseStepperProps> = ({
                         : isActive
                         ? 'bg-blue-600 text-white shadow-md border-2 border-blue-400 ring-2 ring-blue-200'
                         : isDone
-                        ? 'bg-emerald-50/90 text-emerald-950 border-2 border-emerald-300 hover:bg-emerald-100/90 shadow-2xs'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-white border border-transparent font-bold'
+                        ? 'bg-emerald-100/90 text-emerald-950 border-2 border-emerald-400 hover:bg-emerald-200/90 shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-white border border-slate-200 font-bold bg-white/70'
                     }`}
                   >
                     <span className="truncate">{phase.title}</span>
                     {isDone ? (
-                      <span className="flex items-center shrink-0 ml-1 bg-emerald-200/80 text-emerald-900 p-0.5 rounded-full">
-                        <CheckCircle2 className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-emerald-700'}`} />
+                      <span className="flex items-center shrink-0 ml-1.5 bg-emerald-200/90 text-emerald-950 px-1.5 py-0.5 rounded-full text-[10px] font-extrabold border border-emerald-400">
+                        <CheckCircle2 className={`w-3.5 h-3.5 mr-0.5 ${isActive ? 'text-emerald-900' : 'text-emerald-800'}`} />
+                        <span>Erfüllt</span>
                       </span>
                     ) : null}
                   </button>
