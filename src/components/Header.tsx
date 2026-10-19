@@ -2,8 +2,9 @@ import React from 'react';
 import {
   Printer,
   WifiOff,
-  CloudCheck,
+  ShieldCheck,
   Shield,
+  FileText,
 } from 'lucide-react';
 import { PWAInstallButton } from './PWAInstallButton';
 
@@ -14,6 +15,7 @@ interface HeaderProps {
   teacherMode: boolean;
   onOpenTeacherModal: () => void;
   onPrint: () => void;
+  onExportWord?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -22,6 +24,7 @@ export const Header: React.FC<HeaderProps> = ({
   teacherMode,
   onOpenTeacherModal,
   onPrint,
+  onExportWord,
 }) => {
   return (
     <header className="bg-white/95 backdrop-blur-md text-slate-900 sticky top-0 z-40 border-b border-slate-200 shadow-xs no-print">
@@ -68,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </>
               ) : (
                 <>
-                  <CloudCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                   <span className="hidden sm:inline">Lokal gesichert</span>
                 </>
               )}
@@ -86,6 +89,18 @@ export const Header: React.FC<HeaderProps> = ({
               <Printer className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">PDF / Druck</span>
             </button>
+
+            {/* Word (.doc) Export Button */}
+            {onExportWord && (
+              <button
+                onClick={onExportWord}
+                className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
+                title="Gesamtes Lerntagebuch als Word-kompatible Datei (.doc) herunterladen"
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span className="hidden md:inline">Word (.doc)</span>
+              </button>
+            )}
 
             {/* Teacher Mode Button */}
             <button

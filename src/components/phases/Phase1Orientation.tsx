@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { QUIZ_QUESTIONS, checkQuizAnswers } from '../../utils/legal-learning';
 import { DecisionTreePhase1 } from '../diagrams/DecisionTreePhase1';
+import { StepTransition } from '../StepTransition';
 
 interface Phase1OrientationProps {
   quizAnswers: Record<string, string>;
@@ -77,45 +78,43 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
   const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}`;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
-      {/* Phase Intro Banner */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
-              Doppelstunde 1 • Schritt 1
-            </span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            01. Arten der Verfügung & Orientierungskompass
-          </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-3xl">
-            Bevor Sie selbst eine Patientenverfügung erstellen, klären wir präzise die rechtlichen Grundbegriffe: Wer darf eigentlich entscheiden, wenn eine Person durch Unfall oder Krankheit nicht mehr selbst entscheiden kann?
-          </p>
+    <div className="space-y-6 animate-in fade-in duration-300">
+      {/* Phase Intro Banner - Clean and structured */}
+      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col items-start gap-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+            Doppelstunde 1 • Phase 1
+          </span>
+          <span className="text-xs font-semibold text-slate-500">
+            Dauer: ca. 20 Minuten
+          </span>
         </div>
-
-        {/* Quick Task Card */}
-        <div className="bg-slate-50 border border-slate-200 p-4 sm:p-5 rounded-2xl shrink-0 w-full lg:w-80 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-blue-700">
-            <Sparkles className="w-4 h-4 text-blue-600" />
-            <span>Arbeitsauftrag Schritt 1:</span>
-          </div>
-          <ol className="text-xs text-slate-600 space-y-1 list-decimal list-inside">
-            <li>Fachvideo ansehen</li>
-            <li>Foliensatz „01. Arten der Verfügung“ sichten</li>
-            <li>Präzisions-Check (Zuordnung) interaktiv lösen</li>
-          </ol>
+        <div className="space-y-2">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Phase 1: Rechtliche Grundlagen & Arten der Verfügung
+          </h2>
+          <p className="text-slate-700 text-sm sm:text-base leading-relaxed max-w-4xl">
+            Bevor Sie selbst eine Patientenverfügung erstellen, klären wir präzise die rechtlichen Grundbegriffe: Wer darf eigentlich entscheiden, wenn eine Person durch Unfall oder Krankheit nicht mehr selbst einwilligungsfähig ist?
+          </p>
         </div>
       </div>
 
+      {/* Transition to Video Box */}
+      <StepTransition
+        stepNumber="1"
+        title="Video-Impuls ansehen"
+        hint="Unterschiede der Vorsorgeinstrumente im Video"
+        variant="blue"
+      />
+
       {/* Video Box */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
-              Impuls-Video
+              Schritt 1 • Impuls-Video
             </span>
-            <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-0.5">
+            <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 mt-0.5">
               Vorsorgevollmacht, Betreuungsverfügung, Patientenverfügung: Was ist der Unterschied?
             </h3>
           </div>
@@ -132,74 +131,34 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
           </a>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-          {/* Video Container with responsive 16:9 iframe embed */}
-          <div className="lg:col-span-7 aspect-video rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 relative shadow-sm">
-            <iframe
-              className="w-full h-full"
-              src={embedUrl}
-              title="YouTube Video Player: Vorsorgevollmacht, Betreuungsverfügung, Patientenverfügung"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-
-          {/* Active Listening Prompt */}
-          <div className="lg:col-span-5 bg-blue-50/60 rounded-2xl p-5 sm:p-6 border border-blue-100 space-y-4">
-            <div className="flex items-center gap-2 text-sm font-bold text-blue-900">
-              <BookOpen className="w-4 h-4 text-blue-600" />
-              <span>Worauf es jetzt ankommt (Präzision!):</span>
-            </div>
-            <p className="text-xs text-slate-700 leading-relaxed">
-              In der Praxis werden die vier Instrumente fast immer verwechselt. Achten Sie beim Zuschauen und auf den folgenden Folien genau auf diese vier Kernfragen:
-            </p>
-            <ul className="space-y-3 text-xs text-slate-700">
-              <li className="flex items-start gap-2.5">
-                <span className="w-5 h-5 rounded-md bg-blue-200 text-blue-900 font-bold text-[11px] flex items-center justify-center shrink-0">
-                  1
-                </span>
-                <span>
-                  Welches Dokument macht eine Person sofort zum <strong>„Vertreter im Willen“</strong> – ganz ohne Gericht?
-                </span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <span className="w-5 h-5 rounded-md bg-blue-200 text-blue-900 font-bold text-[11px] flex items-center justify-center shrink-0">
-                  2
-                </span>
-                <span>
-                  Was passiert mit der <strong>Geschäfts- und Einsichtsfähigkeit</strong>, wenn eine Betreuung angeordnet wird?
-                </span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <span className="w-5 h-5 rounded-md bg-blue-200 text-blue-900 font-bold text-[11px] flex items-center justify-center shrink-0">
-                  3
-                </span>
-                <span>
-                  Wie lange und unter welchen Bedingungen gilt das <strong>gesetzliche Vertretungsrecht für Eheleute (§ 1358 BGB)</strong>?
-                </span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <span className="w-5 h-5 rounded-md bg-blue-200 text-blue-900 font-bold text-[11px] flex items-center justify-center shrink-0">
-                  4
-                </span>
-                <span>
-                  Warum wirkt eine <strong>Patientenverfügung „aus sich heraus“</strong>?
-                </span>
-              </li>
-            </ul>
-          </div>
+        {/* Video Container with responsive 16:9 iframe embed */}
+        <div className="max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 relative shadow-sm">
+          <iframe
+            className="w-full h-full"
+            src={embedUrl}
+            title="YouTube Video Player: Vorsorgevollmacht, Betreuungsverfügung, Patientenverfügung"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </div>
       </div>
+
+      {/* Transition to Step 2 */}
+      <StepTransition
+        stepNumber="2"
+        title="Die 4 Rechtsinstrumente im Detail studieren"
+        variant="indigo"
+      />
 
       {/* Step 1.2: Visual Slides - 4 Instrumente */}
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
-              Folien-Sicherung • Kapitel 01
+            <span className="text-xs font-bold uppercase tracking-wider text-indigo-700">
+              Schritt 2 • Foliensatz & Schaubild
             </span>
             <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">
-              Die 4 Instrumente im juristischen Vergleich
+              Die 4 Instrumente im juristischen Detailvergleich
             </h3>
           </div>
           <span className="text-xs text-slate-500 font-medium">
@@ -212,35 +171,35 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Card 1: Betreuungsverfügung */}
-          <div className="bg-white border-l-4 border-l-indigo-600 border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-between group">
-            <div className="space-y-3">
+          <div className="bg-gradient-to-br from-indigo-50/60 via-slate-50/40 to-white border-2 border-indigo-200/90 hover:border-indigo-400 rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col justify-between group transition">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                <span className="px-3 py-1 rounded-xl text-xs font-bold bg-indigo-100 text-indigo-900 border border-indigo-300">
                   01a • Gerichtliche Anordnung
                 </span>
-                <Scale className="w-4 h-4 text-indigo-600" />
+                <Scale className="w-5 h-5 text-indigo-600" />
               </div>
-              <h4 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition">
+              <h4 className="text-xl font-extrabold text-slate-900 group-hover:text-indigo-700 transition">
                 Betreuungsverfügung
               </h4>
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed italic border-l-2 border-indigo-400 pl-3 bg-slate-50 py-2 rounded-r-xl">
-                „Mit der Anordnung entsteht lediglich ein <strong>Vertretungsrecht für den Betreuer</strong>, das sich <strong>nicht auf den gesamten Rechtskreis</strong> erstreckt.“
+              <p className="text-sm sm:text-base text-slate-800 leading-relaxed italic border-l-4 border-indigo-500 pl-4 bg-white/90 py-3 rounded-r-2xl shadow-2xs">
+                „Mit der Anordnung entsteht lediglich ein <strong className="text-indigo-950">Vertretungsrecht für den Betreuer</strong>, das sich <strong className="text-indigo-950">nicht auf den gesamten Rechtskreis</strong> erstreckt.“
               </p>
-              <div className="space-y-2 text-xs text-slate-700 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
-                <div className="flex items-start gap-2">
+              <div className="space-y-2.5 text-sm text-slate-800 bg-white/80 p-4 rounded-2xl border border-indigo-100/90 shadow-2xs">
+                <div className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
                   <span>Rechte des Betroffenen bleiben ungeschmälert.</span>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
-                  <span className="text-slate-900 font-semibold">
+                  <span className="text-slate-900 font-bold">
                     Geschäfts- und Einsichtsfähigkeit bleiben bestehen!
                   </span>
                 </div>
-                <div className="flex items-start gap-2 pt-1 border-t border-slate-200 text-amber-800">
+                <div className="flex items-start gap-2.5 pt-2 border-t border-indigo-100 text-amber-900 font-medium">
                   <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                   <span>
-                    <strong>Nachrangigkeit:</strong> Existiert bereits eine ausreichende Bevollmächtigung, so ist die Anordnung einer Betreuung nicht möglich.
+                    <strong className="text-amber-950">Nachrangigkeit:</strong> Existiert bereits eine ausreichende Bevollmächtigung, so ist die Anordnung einer Betreuung nicht möglich.
                   </span>
                 </div>
               </div>
@@ -248,31 +207,31 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
           </div>
 
           {/* Card 2: Vorsorgevollmacht */}
-          <div className="bg-white border-l-4 border-l-sky-600 border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-between group">
-            <div className="space-y-3">
+          <div className="bg-gradient-to-br from-sky-50/60 via-slate-50/40 to-white border-2 border-sky-200/90 hover:border-sky-400 rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col justify-between group transition">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200">
+                <span className="px-3 py-1 rounded-xl text-xs font-bold bg-sky-100 text-sky-900 border border-sky-300">
                   01b • Rechtsgeschäftliche Vollmacht
                 </span>
-                <Sparkles className="w-4 h-4 text-sky-600" />
+                <Sparkles className="w-5 h-5 text-sky-600" />
               </div>
-              <h4 className="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition">
+              <h4 className="text-xl font-extrabold text-slate-900 group-hover:text-sky-700 transition">
                 Vorsorgevollmacht
               </h4>
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed italic border-l-2 border-sky-400 pl-3 bg-slate-50 py-2 rounded-r-xl">
-                „Bevollmächtigt eine Person, im Falle einer Notsituation alle oder bestimmte Aufgaben für den <strong>Vollmachtgeber</strong> zu erledigen.“
+              <p className="text-sm sm:text-base text-slate-800 leading-relaxed italic border-l-4 border-sky-500 pl-4 bg-white/90 py-3 rounded-r-2xl shadow-2xs">
+                „Bevollmächtigt eine Person, im Falle einer Notsituation alle oder bestimmte Aufgaben für den <strong className="text-sky-950">Vollmachtgeber</strong> zu erledigen.“
               </p>
-              <div className="space-y-2 text-xs text-slate-700 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
-                <div className="flex items-start gap-2">
+              <div className="space-y-2.5 text-sm text-slate-800 bg-white/80 p-4 rounded-2xl border border-sky-100/90 shadow-2xs">
+                <div className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
                   <span>
-                    Der Bevollmächtigte wird zum <strong>Vertreter im Willen</strong> (entscheidet an Stelle des Vollmachtgebers).
+                    Der Bevollmächtigte wird zum <strong className="text-sky-950 font-bold">Vertreter im Willen</strong> (entscheidet an Stelle des Vollmachtgebers).
                   </span>
                 </div>
-                <div className="flex items-start gap-2 pt-1 border-t border-slate-200 text-blue-900">
+                <div className="flex items-start gap-2.5 pt-2 border-t border-sky-100 text-blue-950 font-medium">
                   <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                   <span>
-                    <strong>Vorrang vor Betreuung:</strong> Betreuung ist nicht erforderlich, soweit Angelegenheiten durch einen Bevollmächtigten ebenso gut besorgt werden können (§ 1896 Abs. 2 Satz 2 BGB).
+                    <strong className="text-blue-900">Vorrang vor Betreuung:</strong> Betreuung ist nicht erforderlich, soweit Angelegenheiten durch einen Bevollmächtigten ebenso gut besorgt werden können (§ 1896 Abs. 2 Satz 2 BGB).
                   </span>
                 </div>
               </div>
@@ -280,62 +239,62 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
           </div>
 
           {/* Card 3: Vertretungsrecht Eheleute */}
-          <div className="bg-white border-l-4 border-l-amber-500 border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-between group">
-            <div className="space-y-3">
+          <div className="bg-gradient-to-br from-amber-50/60 via-slate-50/40 to-white border-2 border-amber-200/90 hover:border-amber-400 rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col justify-between group transition">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                <span className="px-3 py-1 rounded-xl text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
                   01c • Gesetzliches Notvertretungsrecht
                 </span>
-                <Calendar className="w-4 h-4 text-amber-600" />
+                <Calendar className="w-5 h-5 text-amber-600" />
               </div>
-              <h4 className="text-lg font-bold text-slate-900 group-hover:text-amber-700 transition">
+              <h4 className="text-xl font-extrabold text-slate-900 group-hover:text-amber-800 transition">
                 Vertretungsrecht Eheleute (§ 1358 BGB)
               </h4>
-              <div className="space-y-2 text-xs text-slate-700 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
-                <div className="flex items-start gap-2">
+              <div className="space-y-2.5 text-sm text-slate-800 bg-white/80 p-4 rounded-2xl border border-amber-100/90 shadow-2xs">
+                <div className="flex items-start gap-2.5">
                   <span className="text-amber-600 font-bold">•</span>
-                  <span><strong>Seit 01.01.2023</strong> gesetzlich geregelt.</span>
+                  <span><strong className="text-amber-950">Seit 01.01.2023</strong> gesetzlich geregelt.</span>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-2.5">
                   <span className="text-amber-600 font-bold">•</span>
-                  <span>Greift aufgrund von <strong>Bewusstlosigkeit und/oder Krankheit</strong>, die eine Unfähigkeit der Regelung eigener Angelegenheiten bewirkt.</span>
+                  <span>Greift aufgrund von <strong className="text-amber-950">Bewusstlosigkeit und/oder Krankheit</strong>, die eine Unfähigkeit der Regelung eigener Angelegenheiten bewirkt.</span>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-2.5">
                   <span className="text-amber-600 font-bold">•</span>
-                  <span><strong>Schweigepflicht</strong> wird gegenüber der vertretenden Person aufgehoben.</span>
+                  <span><strong className="text-amber-950">Schweigepflicht</strong> wird gegenüber der vertretenden Person aufgehoben.</span>
                 </div>
-                <div className="flex items-start gap-2 text-slate-600">
+                <div className="flex items-start gap-2.5 text-slate-700">
                   <span className="text-rose-600 font-bold">✕</span>
-                  <span><strong>Ausschluss:</strong> Trifft nicht zu, wenn Eheleute getrennt leben, Ehepartner:in ablehnt oder eine andere Verfügung in Kraft getreten ist.</span>
+                  <span><strong className="text-rose-900">Ausschluss:</strong> Trifft nicht zu, wenn Eheleute getrennt leben, Ehepartner:in ablehnt oder eine andere Verfügung in Kraft getreten ist.</span>
                 </div>
-                <div className="flex items-start gap-2 pt-1 border-t border-slate-200 text-amber-900">
-                  <span className="text-amber-600 font-bold">⏱</span>
-                  <span className="font-semibold"><strong>Befristung:</strong> Vertretungsrecht gilt für <strong>6 Monate</strong>.</span>
+                <div className="flex items-start gap-2.5 pt-2 border-t border-amber-100 text-amber-950 font-bold">
+                  <span className="text-amber-600">⏱</span>
+                  <span>Befristung: Vertretungsrecht gilt für maximal 6 Monate.</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Card 4: Patientenverfügung */}
-          <div className="bg-white border-l-4 border-l-emerald-600 border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-between group">
-            <div className="space-y-3">
+          <div className="bg-gradient-to-br from-emerald-50/60 via-slate-50/40 to-white border-2 border-emerald-200/90 hover:border-emerald-400 rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col justify-between group transition">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                <span className="px-3 py-1 rounded-xl text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
                   01d • Medizinische Willenserklärung
                 </span>
-                <Zap className="w-4 h-4 text-emerald-600" />
+                <Zap className="w-5 h-5 text-emerald-600" />
               </div>
-              <h4 className="text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition">
+              <h4 className="text-xl font-extrabold text-slate-900 group-hover:text-emerald-800 transition">
                 Patientenverfügung
               </h4>
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed italic border-l-2 border-emerald-500 pl-3 bg-slate-50 py-2 rounded-r-xl">
-                „Schriftliche Verfügung einer erwachsenen Person über zu ergreifende bzw. zu unterlassende <strong>medizinische Maßnahmen</strong> (ärztliche Heileingriffe, Verweigerung lebensverlängernder Maßnahmen) für den Fall, dass sie ihren Willen nicht (wirksam) gegenüber Ärzten, Pflegekräften oder Einrichtungsträgern erklären kann.“
+              <p className="text-sm sm:text-base text-slate-800 leading-relaxed italic border-l-4 border-emerald-500 pl-4 bg-white/90 py-3 rounded-r-2xl shadow-2xs">
+                „Schriftliche Verfügung einer erwachsenen Person über zu ergreifende bzw. zu unterlassende <strong className="text-emerald-950">medizinische Maßnahmen</strong> (ärztliche Heileingriffe, Verweigerung lebensverlängernder Maßnahmen) für den Fall, dass sie ihren Willen nicht (wirksam) gegenüber Ärzten, Pflegekräften oder Einrichtungsträgern erklären kann.“
               </p>
-              <div className="space-y-2 text-xs text-slate-700 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
-                <div className="font-bold text-emerald-900 pt-1 flex items-center gap-1.5">
-                  <Zap className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div className="space-y-2.5 text-sm text-slate-800 bg-white/80 p-4 rounded-2xl border border-emerald-100/90 shadow-2xs">
+                <div className="font-bold text-emerald-950 pt-1 flex items-start gap-2">
+                  <Zap className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <span>
-                    Wichtig: Sie <strong>„wirkt aus sich heraus“</strong>, d. h., sie ist – sobald von ihrer Existenz Kenntnis erlangt wurde – <u>sofort und ohne nachzufragen zu achten</u>!
+                    Wichtig: Sie <strong className="underline decoration-emerald-500 underline-offset-2">„wirkt aus sich heraus“</strong>, d. h., sie ist – sobald von ihrer Existenz Kenntnis erlangt wurde – <u>sofort und ohne nachzufragen zu achten</u>!
                   </span>
                 </div>
               </div>
@@ -344,30 +303,38 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
         </div>
       </div>
 
+      {/* Transition to Step 3 */}
+      <StepTransition
+        stepNumber="3"
+        title="Präzisions-Check lösen"
+        hint="Interaktiver Selbsttest zur Begriffsabgrenzung"
+        variant="emerald"
+      />
+
       {/* Interactive Precision Quiz */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
-              Interaktiver Selbsttest
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+              Schritt 3 • Interaktiver Selbsttest
             </span>
-            <h3 className="text-lg sm:text-xl font-bold text-slate-900">
+            <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 mt-0.5">
               Präzisions-Check: Bringen Sie die Begriffe nicht durcheinander!
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-sm text-slate-600 mt-1 font-medium">
               Wählen Sie für jede Aussage das exakt passende juristische Instrument:
             </p>
           </div>
 
           <button
             onClick={handleCheckQuiz}
-            className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition transform active:scale-95 cursor-pointer no-print"
+            className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-xs transition transform active:scale-95 cursor-pointer no-print"
           >
             Antworten prüfen
           </button>
         </div>
 
-        <div className="space-y-3.5">
+        <div className="space-y-4">
           {QUIZ_QUESTIONS.map((q) => {
             const selectedVal = localAnswers[q.id] || '';
             const isCorrect = feedback.submitted ? feedback.results[q.id] : null;
@@ -375,22 +342,22 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
             return (
               <div
                 key={q.id}
-                className={`p-4 rounded-2xl border transition ${
+                className={`p-5 rounded-2xl border-2 transition ${
                   isCorrect === true
-                    ? 'bg-emerald-50/70 border-emerald-300'
+                    ? 'bg-emerald-50/80 border-emerald-300'
                     : isCorrect === false
-                    ? 'bg-rose-50/70 border-rose-300'
-                    : 'bg-slate-50 border-slate-200 hover:border-slate-300'
-                } flex flex-col md:flex-row md:items-center justify-between gap-3`}
+                    ? 'bg-rose-50/80 border-rose-300'
+                    : 'bg-slate-50/80 border-slate-200 hover:border-slate-300'
+                } flex flex-col md:flex-row md:items-center justify-between gap-4`}
               >
-                <div className="space-y-1 flex-1">
-                  <span className="text-xs sm:text-sm font-semibold text-slate-900">
+                <div className="space-y-1.5 flex-1">
+                  <span className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
                     {q.question}
                   </span>
                   {feedback.submitted && (
                     <p
-                      className={`text-xs mt-1 font-medium ${
-                        isCorrect ? 'text-emerald-700' : 'text-rose-700'
+                      className={`text-sm mt-1.5 font-semibold ${
+                        isCorrect ? 'text-emerald-800' : 'text-rose-800'
                       }`}
                     >
                       {q.explanation}
@@ -402,11 +369,11 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
                   <select
                     value={selectedVal}
                     onChange={(e) => handleSelectAnswer(q.id, e.target.value)}
-                    className={`w-full md:w-64 px-3.5 py-2 rounded-xl text-xs font-bold border transition focus:outline-none focus:ring-2 ${
+                    className={`w-full md:w-72 px-4 py-2.5 rounded-xl text-sm font-bold border-2 transition focus:outline-none focus:ring-2 ${
                       isCorrect === true
-                        ? 'bg-white text-emerald-900 border-emerald-400 focus:ring-emerald-200'
+                        ? 'bg-white text-emerald-950 border-emerald-400 focus:ring-emerald-200'
                         : isCorrect === false
-                        ? 'bg-white text-rose-900 border-rose-400 focus:ring-rose-200'
+                        ? 'bg-white text-rose-950 border-rose-400 focus:ring-rose-200'
                         : 'bg-white text-slate-900 border-slate-300 focus:ring-blue-200 focus:border-blue-500'
                     }`}
                   >

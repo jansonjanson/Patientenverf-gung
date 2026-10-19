@@ -24,10 +24,10 @@ export const StressTestFlowPhase5: React.FC<StressTestFlowPhase5Props> = ({
           </div>
           <div>
             <h4 className="text-base font-bold text-slate-900">
-              Didaktisches Schaubild: Der nächtliche 3:00-Uhr-Krankenbett-Stresstest
+              Didaktisches Schaubild: Der nächtliche 3:00-Uhr-Notfall-Stresstest
             </h4>
             <p className="text-xs text-slate-500">
-              Prüfkaskade zur Belastbarkeit Ihrer eigenen Formulierung am Notfallbett
+              Prüfkaskade zur Belastbarkeit Ihrer eigenen Formulierung in der klinischen Notfallsituation
             </p>
           </div>
         </div>
@@ -102,7 +102,7 @@ export const StressTestFlowPhase5: React.FC<StressTestFlowPhase5Props> = ({
             </span>
             <Clock className="w-4 h-4 text-emerald-600" />
           </div>
-          <p className="text-xs font-bold text-slate-900">Krankenbett-Stresstest</p>
+          <p className="text-xs font-bold text-slate-900">Notfall-Stresstest</p>
           <p className="text-[11px] text-slate-500 mt-0.5">Notärztliche Bindung um 03:00 Uhr</p>
         </button>
       </div>

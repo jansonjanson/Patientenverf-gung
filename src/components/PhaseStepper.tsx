@@ -9,7 +9,7 @@ interface PhaseStepperProps {
 }
 
 const PHASES = [
-  { id: 1, title: '1. Kompass & Video', ds: 1 },
+  { id: 1, title: '1. Arten der Verfügung & Video', ds: 1 },
   { id: 2, title: '2. Selbsterfahrung', ds: 1 },
   { id: 3, title: '3. Tandem-Vergleich', ds: 1 },
   { id: 4, title: '4. Recht & Wenn-Dann', ds: 2 },

@@ -11,6 +11,7 @@ import { TeacherModal } from './components/TeacherModal';
 import { PrintHandoutModal } from './components/PrintHandoutModal';
 import { useClassroomSync, CaseState } from './hooks/useClassroomSync';
 import { computeOverallProgress } from './utils/legal-learning';
+import { exportToWord } from './utils/exportUtils';
 import { WifiOff, Award } from 'lucide-react';
 
 export default function App() {
@@ -103,6 +104,57 @@ export default function App() {
     }));
   };
 
+  const handleExportAllToWord = () => {
+    exportToWord({
+      title: 'Patientenverfügung & Strafrecht I – Gesamtes Lerntagebuch',
+      subtitle: 'Fachweiterbildung Palliative Care (CE08 U3) • Lehrinhalte nach Großkopf & Klein',
+      sections: [
+        {
+          heading: 'Phase 1: Präzisions-Check (Rechtsinstrumente)',
+          content: {
+            'Erreichte Punktzahl im Quiz': `${data.quizScore} von 4 Punkten`,
+            'Quiz eingereicht': data.quizSubmitted ? 'Ja' : 'Nein',
+          },
+        },
+        {
+          heading: 'Phase 2: Selbsterfahrung (Stolperstein-Protokoll)',
+          content: {
+            'Tandem-Werkzeuge': data.toolsChosen || '(Keine Angabe)',
+            'Größte Hürde / Zögerungspunkt': data.hesitationPoint || '(Keine Angabe)',
+            'Notierte Sätze für den Stresstest': data.ownPvSentences || '(Keine Angabe)',
+          },
+        },
+        {
+          heading: 'Phase 3: Tandem-Vergleich (4 Leitfragen)',
+          content: {
+            '1. Gemeinsamkeiten': data.comparisonQ1 || '(Keine Angabe)',
+            '2. Unterschiede': data.comparisonQ2 || '(Keine Angabe)',
+            '3. Was fehlt? (Blinde Flecken)': data.comparisonQ3 || '(Keine Angabe)',
+            '4. Offene Fragen aus Nutzersicht': data.comparisonQ4 || '(Keine Angabe)',
+          },
+        },
+        {
+          heading: 'Phase 5: Eigen-Check (3-Punkte-Stresstest)',
+          content: {
+            '1. WENN-Kriterium (Krankheitszustand)': data.checklistSelf1 ? 'Erfüllt' : 'Nicht erfüllt',
+            '2. DANN-Kriterium (Maßnahmen)': data.checklistSelf2 ? 'Erfüllt' : 'Nicht erfüllt',
+            '3. Kombination mit Vorsorgevollmacht': data.checklistSelf3 ? 'Erfüllt' : 'Nicht erfüllt',
+            'Persönliches Fazit': data.selfCheckReflection || '(Keine Angabe)',
+          },
+        },
+        {
+          heading: 'Phase 6: Rechts-Konsil (Die 6 Praxisfälle)',
+          content: Object.fromEntries(
+            Object.entries(data.cases || {}).map(([id, c]) => [
+              `Fall ${id}`,
+              `WENN: ${c.wenn || '-'} | DANN: ${c.dann || '-'} (Diagnose: ${(c.diagnosis || []).join(', ') || '-'})`,
+            ])
+          ),
+        },
+      ],
+    }, 'patientenverfuegung_gesamtdokumentation.doc');
+  };
+
   if (!isInitialized) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-800">
@@ -124,6 +176,7 @@ export default function App() {
         teacherMode={data.teacherMode}
         onOpenTeacherModal={() => setIsTeacherModalOpen(true)}
         onPrint={() => setIsPrintModalOpen(true)}
+        onExportWord={handleExportAllToWord}
       />
 
       {/* Stepper Navigation */}
@@ -151,6 +204,7 @@ export default function App() {
           <Phase2SelfExperience
             toolsChosen={data.toolsChosen}
             hesitationPoint={data.hesitationPoint}
+            creationInsights={data.creationInsights}
             ownPvSentences={data.ownPvSentences}
             onUpdateField={(field, val) => updateData({ [field]: val })}
             onNextPhase={() => handleSelectPhase(3)}
@@ -226,8 +280,6 @@ export default function App() {
         onClose={() => setIsTeacherModalOpen(false)}
         teacherMode={data.teacherMode}
         onToggleTeacherMode={(active) => updateData({ teacherMode: active })}
-        customVideoUrl={data.customVideoUrl}
-        onUpdateVideoUrl={(url) => updateData({ customVideoUrl: url })}
         onResetAllData={resetAll}
       />
 

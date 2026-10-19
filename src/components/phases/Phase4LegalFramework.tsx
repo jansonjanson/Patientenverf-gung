@@ -1,35 +1,64 @@
-import React from 'react';
-import { ArrowRight, CheckCircle2, AlertCircle, ShieldAlert } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, CheckCircle2, AlertCircle, ShieldAlert, Activity, ShieldCheck, Sparkles, Zap, ArrowRightCircle } from 'lucide-react';
 import { LegalChecklistFlowPhase4 } from '../diagrams/LegalChecklistFlowPhase4';
+import { StepTransition } from '../StepTransition';
 
 interface Phase4LegalFrameworkProps {
   onNextPhase: () => void;
 }
 
+const WENN_EXAMPLES = [
+  'Endstadium einer unheilbaren, tödlich verlaufenden Erkrankung',
+  'irreversibles Koma ohne Aussicht auf Wiedererlangung des Bewusstseins',
+  'fortgeschrittener Hirnabbauprozess (z. B. schwere Demenz)',
+];
+
+const DANN_EXAMPLES = [
+  'lehne ich alle lebensverlängernden Maßnahmen wie künstliche Beatmung und Ernährung (PEG) ab',
+  'wünsche ich die Einstellung dialytischer Behandlungen',
+  'fordere ich eine umfassende palliative Schmerz- und Symptomtherapie',
+];
+
 export const Phase4LegalFramework: React.FC<Phase4LegalFrameworkProps> = ({ onNextPhase }) => {
+  const [selectedWennIdx, setSelectedWennIdx] = useState(0);
+  const [selectedDannIdx, setSelectedDannIdx] = useState(0);
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* Phase Intro Banner */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-        <div className="space-y-2">
+      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col items-start gap-4">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-black uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
-            Doppelstunde 2 • Schritt 4
+            Doppelstunde 2 • Phase 4
           </span>
+          <span className="text-xs font-semibold text-slate-500">
+            Dauer: ca. 35 Minuten
+          </span>
+        </div>
+        <div className="space-y-2">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            02. Voraussetzungen & 03. Wenn-Dann-Formulierung
+            Phase 4: Rechtlicher Rahmen – Die 6 Voraussetzungen & WENN-DANN-Formel
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-3xl">
-            Wann ist eine Patientenverfügung für Ärzt:innen und Pflegende rechtlich bindend – und wann scheitert sie in der Praxis an mangelnder Bestimmtheit?
+          <p className="text-slate-700 text-sm sm:text-base leading-relaxed max-w-4xl">
+            Wann ist eine Patientenverfügung für Ärzt:innen und Pflegeteams rechtlich bindend – und wann scheitert sie in der Praxis an mangelnder Bestimmtheit? Nachfolgend finden Sie die Kernkriterien nach Großkopf & Klein sowie die höchstrichterliche Rechtsprechung (BGH).
           </p>
         </div>
       </div>
+
+      {/* Transition to Step 1 */}
+      <StepTransition
+        stepNumber="1"
+        title="Die 6 Wirksamkeitsvoraussetzungen studieren"
+        hint="Gesetzliche Kriterien nach § 1827 BGB (ehem. § 1901a BGB)"
+        variant="blue"
+      />
 
       {/* KAPITEL 02: DIE 6 VORAUSSETZUNGEN EINER BINDENDEN PATIENTENVERFÜGUNG */}
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
-              Folien-Sicherung • Kapitel 02
+              Schritt 1 • Foliensatz & Kriterien-Prüfung
             </span>
             <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">
               Die 6 Voraussetzungen einer bindenden Patientenverfügung
@@ -45,121 +74,128 @@ export const Phase4LegalFramework: React.FC<Phase4LegalFrameworkProps> = ({ onNe
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {/* Voraussetzung 1 */}
-          <div className="bg-white border border-slate-200 hover:border-blue-400 rounded-3xl p-6 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3">
+          <div className="bg-gradient-to-br from-blue-50/70 via-slate-50/30 to-white border-2 border-blue-300 hover:border-blue-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
+            <div className="space-y-3.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-blue-700 uppercase tracking-wider">
+                <span className="text-xs font-black text-blue-800 uppercase tracking-wider bg-blue-100 px-3 py-1 rounded-xl border border-blue-200">
                   Voraussetzung 01
                 </span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs">
                   Zentral!
                 </span>
               </div>
-              <h4 className="font-bold text-slate-900 text-base">
+              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
                 Einwilligungsfähigkeit ausreichend
               </h4>
-              <p className="text-xs text-slate-500 font-medium">
+              <p className="text-xs sm:text-sm text-blue-900 font-bold">
                 Volljährigkeit & Vollbesitz geistiger Kräfte
               </p>
-              <div className="space-y-2 text-xs text-slate-700 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+              <div className="space-y-2 text-sm text-slate-800 bg-white/90 p-4 rounded-2xl border border-blue-100 shadow-2xs font-medium">
                 <p>
-                  <strong>1. Einsichtsfähig:</strong> Versteht Art, Bedeutung und Konsequenzen der Maßnahme.
+                  <strong className="text-blue-950">1. Einsichtsfähig:</strong> Versteht Art, Bedeutung und Konsequenzen der Maßnahme.
                 </p>
                 <p>
-                  <strong>2. Urteilsfähig:</strong> Kann Vor- und Nachteile sowie mögliche Alternativen abwägen.
+                  <strong className="text-blue-950">2. Urteilsfähig:</strong> Kann Vor- und Nachteile sowie mögliche Alternativen abwägen.
                 </p>
                 <p>
-                  <strong>3. Freie Willensbildung:</strong> Kann ohne äußeren Druck oder Beeinflussung eine Entscheidung treffen.
+                  <strong className="text-blue-950">3. Freie Willensbildung:</strong> Kann ohne äußeren Druck eine Entscheidung treffen.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Voraussetzung 2 */}
-          <div className="bg-white border border-slate-200 hover:border-blue-400 rounded-3xl p-6 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-xs font-black text-blue-700 uppercase tracking-wider">
+          <div className="bg-gradient-to-br from-emerald-50/70 via-slate-50/30 to-white border-2 border-emerald-300 hover:border-emerald-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
+            <div className="space-y-3.5">
+              <span className="inline-block text-xs font-black text-emerald-800 uppercase tracking-wider bg-emerald-100 px-3 py-1 rounded-xl border border-emerald-200">
                 Voraussetzung 02
               </span>
-              <h4 className="font-bold text-slate-900 text-base">
-                Schriftlich verfasst & unterschrieben
+              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
+                Schriftlich verfasst & eigenhändig unterschrieben
               </h4>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Die Verfügung muss in Schriftform verfasst und eigenhändig unterschrieben sein.
+              <p className="text-sm text-slate-700 leading-relaxed font-medium">
+                Die Verfügung muss zwingend in Schriftform verfasst und persönlich unterschrieben sein.
               </p>
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Wichtiger Zusatz: Notarielle Beglaubigung nicht notwendig!</span>
+              <div className="p-3.5 rounded-2xl bg-emerald-100/80 border border-emerald-300 text-sm font-bold text-emerald-950 flex items-start gap-2.5">
+                <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                <span>Wichtiger Zusatz: Notarielle Beglaubigung ist <u>nicht</u> notwendig!</span>
               </div>
             </div>
           </div>
 
           {/* Voraussetzung 3 */}
-          <div className="bg-white border border-slate-200 hover:border-blue-400 rounded-3xl p-6 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-xs font-black text-blue-700 uppercase tracking-wider">
+          <div className="bg-gradient-to-br from-amber-50/70 via-slate-50/30 to-white border-2 border-amber-300 hover:border-amber-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
+            <div className="space-y-3.5">
+              <span className="inline-block text-xs font-black text-amber-900 uppercase tracking-wider bg-amber-100 px-3 py-1 rounded-xl border border-amber-200">
                 Voraussetzung 03
               </span>
-              <h4 className="font-bold text-slate-900 text-base">
-                Erklärung der (Nicht-)Einwilligung im Voraus
+              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
+                Unwiderrufen zum Behandlungszeitpunkt
               </h4>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Verbindliche Willenserklärung (Einwilligung oder Nichteinwilligung) für zukünftige Behandlungssituationen.
+              <p className="text-sm text-slate-700 leading-relaxed font-medium">
+                Der Verfasser darf die Verfügung nicht zwischenzeitlich (auch formlos oder mündlich) widerrufen haben.
               </p>
-              <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs font-medium text-amber-800 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-                <span>Abgrenzung: Keine Behandlungswünsche oder allgemeinen Richtlinien!</span>
+              <div className="p-3.5 rounded-2xl bg-amber-100/80 border border-amber-300 text-sm text-amber-950 leading-relaxed font-medium">
+                <strong>Rechtsfolge:</strong> Auch ein nonverbaler Abwehrwille in der Behandlungssituation bricht die frühere schriftliche Verfügung!
               </div>
             </div>
           </div>
 
           {/* Voraussetzung 4 */}
-          <div className="bg-white border border-slate-200 hover:border-blue-400 rounded-3xl p-6 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-xs font-black text-blue-700 uppercase tracking-wider">
-                Voraussetzung 04
-              </span>
-              <h4 className="font-bold text-slate-900 text-base">
-                Bestimmtheit…
+          <div className="bg-gradient-to-br from-indigo-50/70 via-slate-50/30 to-white border-2 border-indigo-300 hover:border-indigo-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
+            <div className="space-y-3.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-indigo-900 uppercase tracking-wider bg-indigo-100 px-3 py-1 rounded-xl border border-indigo-200">
+                  Voraussetzung 04
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-indigo-600 text-white shadow-2xs">
+                  BGH-Fokus!
+                </span>
+              </div>
+              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
+                Konkrete Festlegungen (Bestimmtheitsgebot)
               </h4>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                …des <strong>Behandlungszustands</strong> und des <strong>Handelns- oder Unterlassensszenarios</strong>.
+              <p className="text-sm text-slate-700 leading-relaxed font-medium">
+                Konkrete Festlegungen über die <strong>Einwilligung oder Nichteinwilligung</strong> in bestimmte, noch nicht unmittelbar bevorstehende ärztliche Eingriffe.
               </p>
-              <div className="p-3 rounded-2xl bg-blue-50 border border-blue-200 text-xs font-bold text-blue-800">
-                → Siehe Kapitel 03: Die juristische <strong>WENN – DANN – Logik</strong>.
+              <div className="p-3.5 rounded-2xl bg-indigo-100/80 border border-indigo-300 text-sm text-indigo-950 leading-relaxed font-medium">
+                <strong>BGH-Urteil (BGH XII ZB 61/16):</strong> Pauschale Floskeln wie „keine Schläuche“ oder „in Würde sterben“ genügen <u>nicht</u>!
               </div>
             </div>
           </div>
 
           {/* Voraussetzung 5 */}
-          <div className="bg-white border border-slate-200 hover:border-blue-400 rounded-3xl p-6 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-xs font-black text-blue-700 uppercase tracking-wider">
+          <div className="bg-gradient-to-br from-teal-50/70 via-slate-50/30 to-white border-2 border-teal-300 hover:border-teal-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
+            <div className="space-y-3.5">
+              <span className="inline-block text-xs font-black text-teal-900 uppercase tracking-wider bg-teal-100 px-3 py-1 rounded-xl border border-teal-200">
                 Voraussetzung 05
               </span>
-              <h4 className="font-bold text-slate-900 text-base">
-                Keine Anzeichen der Willensänderung
+              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
+                Akuter Eintritt der Entscheidungsunfähigkeit
               </h4>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Keine konkreten Anhaltspunkte, dass Entscheidungen sich geändert haben (Widerruf ist jederzeit auch formlos und konkludent möglich).
+              <p className="text-sm text-slate-700 leading-relaxed font-medium">
+                Der Verfasser ist zum maßgeblichen Behandlungszeitpunkt nicht in der Lage, seinen Willen wirksam zu äußern.
               </p>
+              <div className="p-3.5 rounded-2xl bg-teal-100/80 border border-teal-300 text-sm text-teal-950 leading-relaxed font-medium">
+                <strong>Grundsatz:</strong> Solange der Patient ansprechbar und einsichtsfähig ist, gilt stets sein tagesaktueller mündlicher Wille.
+              </div>
             </div>
           </div>
 
           {/* Voraussetzung 6 */}
-          <div className="bg-white border border-slate-200 hover:border-blue-400 rounded-3xl p-6 shadow-xs transition flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-xs font-black text-blue-700 uppercase tracking-wider">
+          <div className="bg-gradient-to-br from-rose-50/70 via-slate-50/30 to-white border-2 border-rose-300 hover:border-rose-400 rounded-3xl p-6 sm:p-7 shadow-xs transition flex flex-col justify-between">
+            <div className="space-y-3.5">
+              <span className="inline-block text-xs font-black text-rose-900 uppercase tracking-wider bg-rose-100 px-3 py-1 rounded-xl border border-rose-200">
                 Voraussetzung 06
               </span>
-              <h4 className="font-bold text-slate-900 text-base">
+              <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
                 Keine Sittenwidrigkeit
               </h4>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Die Anordnungen dürfen nicht gegen das Gesetz verstoßen.
+              <p className="text-sm text-slate-700 leading-relaxed font-medium">
+                Die Anordnungen dürfen nicht gegen das Gesetz oder die guten Sitten verstoßen.
               </p>
-              <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-xs font-bold text-rose-800 flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
+              <div className="p-3.5 rounded-2xl bg-rose-100/80 border border-rose-300 text-sm font-bold text-rose-950 flex items-start gap-2.5">
+                <ShieldAlert className="w-5 h-5 text-rose-700 shrink-0 mt-0.5" />
                 <span>Verboten: z. B. keine aktiv direkte Sterbehilfe (§ 216 StGB).</span>
               </div>
             </div>
@@ -167,66 +203,190 @@ export const Phase4LegalFramework: React.FC<Phase4LegalFrameworkProps> = ({ onNe
         </div>
       </div>
 
-      {/* KAPITEL 03: WENN - DANN FORMULIERUNG */}
-      <div className="bg-white border-2 border-blue-200 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+      {/* Transition to Step 2 */}
+      <StepTransition
+        stepNumber="2"
+        title="Die WENN-DANN-Formel als verbindlichen Prozess verstehen"
+        hint="Pulsierender Kausalitäts-Flow: Behandlungszustand ➔ Rechtsfolge"
+        variant="amber"
+      />
+
+      {/* KAPITEL 03: INTERAKTIVER WENN - DANN PROZESS / FLOW */}
+      <div className="bg-white border-2 border-blue-200/90 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-4">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
-              Folien-Sicherung • Kapitel 03
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-700">
+              Schritt 2 • Interaktiver BGH-Formel-Flow
             </span>
             <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-1">
-              Die juristische Formel: WENN – DANN – Formulierung
+              Die juristische WENN – DANN – Prozessformel
             </h3>
           </div>
-          <span className="text-xs text-slate-500 font-medium">Großkopf & Klein (2019a, 2019b)</span>
+          <span className="text-xs text-slate-500 font-medium">BGH XII ZB 61/16 • Bestimmtheitsgebot</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-11 gap-4 items-stretch">
-          {/* WENN Card */}
-          <div className="md:col-span-5 bg-amber-50/70 rounded-2xl p-6 border border-amber-200 flex flex-col justify-between space-y-4">
-            <div className="space-y-3">
-              <span className="inline-block px-3 py-1 rounded-xl bg-amber-200 text-amber-900 font-black text-xs uppercase tracking-wider">
-                1. WENN (Bestimmtheit des Behandlungszustandes)
-              </span>
-              <h4 className="text-lg font-bold text-slate-900">
-                Bestimmtheit des Behandlungszustandes
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                Muss sich auf ein <strong>bestimmtes behandlungsbedürftiges Krankheitsbild</strong> bzw. einen <strong>bestimmten behandlungsbedürftigen Krankheitszustand</strong> beziehen.
-              </p>
+        {/* VISUAL PROCESS FLOW CONTAINER WITH PULSING EFFECT */}
+        <div className="relative bg-slate-50/80 rounded-3xl p-6 border-2 border-slate-200 shadow-inner">
+          <div className="grid grid-cols-1 lg:grid-cols-11 gap-6 items-center">
+            
+            {/* WENN-BOX (PROZESS-SCHRITT 1) */}
+            <div className="lg:col-span-5 bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 text-white rounded-3xl p-6 sm:p-7 shadow-xl shadow-amber-500/20 border-2 border-amber-300 space-y-4 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/20 rounded-full blur-2xl group-hover:scale-125 transition duration-500"></div>
+              
+              <div className="flex items-center justify-between">
+                <span className="px-3 py-1 rounded-full bg-amber-300/30 text-amber-100 font-black text-xs uppercase tracking-wider border border-amber-200/40">
+                  1. WENN-Glied (Bedingung)
+                </span>
+                <Activity className="w-6 h-6 text-amber-200" />
+              </div>
+
+              <div>
+                <h4 className="text-2xl font-black text-white">
+                  Bestimmter Behandlungszustand
+                </h4>
+                <p className="text-xs sm:text-sm text-amber-100 mt-1 font-medium leading-relaxed">
+                  Muss ein <strong>konkretes behandlungsbedürftiges Krankheitsbild</strong> bzw. eine eindeutig beschriebene Lebens- und Sterbesituation bezeichnen.
+                </p>
+              </div>
+
+              <div className="pt-3 border-t border-amber-400/50 space-y-1.5 text-xs text-amber-50">
+                <div className="font-bold text-amber-200">Präzisions-Kriterien nach BGH:</div>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>Unheilbares Endstadium einer Erkrankung</li>
+                  <li>Irreversibles Koma ohne Aufwachchance</li>
+                  <li>Fortgeschrittene Demenz/Hirnschädigung</li>
+                </ul>
+              </div>
             </div>
-            <div className="pt-3 border-t border-amber-200 text-xs text-amber-900 leading-relaxed">
-              <strong>Präzise Beispiele:</strong> „Endstadium einer unheilbaren Erkrankung“, „irreversibles Koma ohne Aussicht auf Besserung“.
+
+            {/* PULSING FLOW CONNECTOR (PFEIL MIT PULS-EFFEKT) */}
+            <div className="lg:col-span-1 flex flex-col items-center justify-center my-2 lg:my-0 gap-2">
+              {/* Pulsing Glowing Circle Icon */}
+              <div className="relative flex items-center justify-center">
+                <div className="absolute inset-0 rounded-2xl bg-blue-500 animate-ping opacity-30"></div>
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/40 border-2 border-white relative z-10 animate-pulse">
+                  <Zap className="w-6 h-6 fill-white text-white" />
+                </div>
+              </div>
+
+              {/* Pulsing Connector Label & Beam */}
+              <div className="flex flex-col items-center">
+                <span className="text-[10px] font-black uppercase tracking-wider text-blue-900 bg-blue-100 px-2 py-0.5 rounded-full border border-blue-300 shadow-2xs whitespace-nowrap">
+                  Löst aus ➔
+                </span>
+                <div className="w-1 lg:w-full h-8 lg:h-1.5 bg-gradient-to-b lg:bg-gradient-to-r from-amber-400 via-blue-500 to-emerald-500 rounded-full my-1 animate-pulse"></div>
+              </div>
+            </div>
+
+            {/* DANN-BOX (PROZESS-SCHRITT 2) */}
+            <div className="lg:col-span-5 bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white rounded-3xl p-6 sm:p-7 shadow-xl shadow-emerald-600/20 border-2 border-emerald-300 space-y-4 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/20 rounded-full blur-2xl group-hover:scale-125 transition duration-500"></div>
+              
+              <div className="flex items-center justify-between">
+                <span className="px-3 py-1 rounded-full bg-emerald-300/30 text-emerald-100 font-black text-xs uppercase tracking-wider border border-emerald-200/40">
+                  2. DANN-Glied (Rechtsfolge)
+                </span>
+                <ShieldCheck className="w-6 h-6 text-emerald-200" />
+              </div>
+
+              <div>
+                <h4 className="text-2xl font-black text-white">
+                  Konkrete Maßnahme / Unterlassen
+                </h4>
+                <p className="text-xs sm:text-sm text-emerald-100 mt-1 font-medium leading-relaxed">
+                  Erklärt die <strong>Einwilligung oder Nichteinwilligung</strong> in gezielte ärztliche und pflegerische Heileingriffe.
+                </p>
+              </div>
+
+              <div className="pt-3 border-t border-emerald-500/50 space-y-1.5 text-xs text-emerald-50">
+                <div className="font-bold text-emerald-200">Präzisions-Kriterien nach BGH:</div>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>Ablehnung künstlicher Beatmung/Ernährung (PEG)</li>
+                  <li>Verzicht auf Wiederbelebung (DNR) / Dialyse</li>
+                  <li>Gezielte Schmerz- und Symptomlinderung</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* INTERAKTIVE CLAUSE SYNTHESIZER PREVIEW - OPTIMIZED BRIGHT COLOR THEME */}
+        <div className="bg-gradient-to-br from-indigo-900 via-slate-800 to-blue-900 text-white rounded-3xl p-6 space-y-5 border-2 border-indigo-400 shadow-lg">
+          <div className="flex items-center justify-between border-b border-indigo-400/40 pb-3">
+            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-300">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>Interaktive WENN-DANN Satzkombination erproben</span>
+            </div>
+            <span className="text-xs text-indigo-200 font-semibold hidden sm:inline">
+              Klicken Sie auf ein Beispiel, um die BGH-Klausel live zu bilden
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+            {/* WENN Selection */}
+            <div className="space-y-2.5">
+              <div className="font-extrabold text-amber-300 flex items-center gap-1.5">
+                <span>1. WENN-Szenario wählen:</span>
+              </div>
+              <div className="space-y-2">
+                {WENN_EXAMPLES.map((ex, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setSelectedWennIdx(i)}
+                    className={`w-full text-left p-3 rounded-2xl border-2 text-xs sm:text-sm transition cursor-pointer leading-relaxed ${
+                      selectedWennIdx === i
+                        ? 'bg-amber-400 text-slate-950 font-black border-amber-300 shadow-md ring-2 ring-amber-200'
+                        : 'bg-indigo-950/70 text-slate-200 border-indigo-800 hover:bg-indigo-900 hover:border-indigo-600'
+                    }`}
+                  >
+                    WENN {ex}...
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* DANN Selection */}
+            <div className="space-y-2.5">
+              <div className="font-extrabold text-emerald-300 flex items-center gap-1.5">
+                <span>2. DANN-Maßnahme wählen:</span>
+              </div>
+              <div className="space-y-2">
+                {DANN_EXAMPLES.map((ex, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setSelectedDannIdx(i)}
+                    className={`w-full text-left p-3 rounded-2xl border-2 text-xs sm:text-sm transition cursor-pointer leading-relaxed ${
+                      selectedDannIdx === i
+                        ? 'bg-emerald-400 text-slate-950 font-black border-emerald-300 shadow-md ring-2 ring-emerald-200'
+                        : 'bg-indigo-950/70 text-slate-200 border-indigo-800 hover:bg-indigo-900 hover:border-indigo-600'
+                    }`}
+                  >
+                    ...DANN {ex}.
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Arrow */}
-          <div className="md:col-span-1 flex items-center justify-center text-3xl font-black text-blue-600 py-2">
-            ➔
-          </div>
-
-          {/* DANN Card */}
-          <div className="md:col-span-5 bg-emerald-50/70 rounded-2xl p-6 border border-emerald-200 flex flex-col justify-between space-y-4">
-            <div className="space-y-3">
-              <span className="inline-block px-3 py-1 rounded-xl bg-emerald-200 text-emerald-900 font-black text-xs uppercase tracking-wider">
-                2. DANN (Bestimmtheit des Handelns- oder Unterlassungsszenarios)
-              </span>
-              <h4 className="text-lg font-bold text-slate-900">
-                Bestimmtheit des Handelns- oder Unterlassens
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                Im Voraus erklärte <strong>Einwilligung oder Nichteinwilligung</strong> zu einer Heilbehandlung oder ärztlichem Eingriff hinsichtlich der <strong>zu ergreifenden oder zu unterlassenen pflegerischen und ärztlichen Maßnahmen</strong>.
-              </p>
-            </div>
-            <div className="pt-3 border-t border-emerald-200 text-xs text-emerald-900 leading-relaxed">
-              <strong>Präzise Beispiele:</strong> „Ablehnung künstlicher Beatmung, Ernährung (PEG) und Dialyse“, „umfassende palliative Schmerztherapie“.
-            </div>
+          {/* Assembled Result */}
+          <div className="p-5 rounded-2xl bg-indigo-950/90 border-2 border-amber-400/80 text-sm sm:text-base leading-relaxed font-bold shadow-inner">
+            <span className="text-xs uppercase tracking-wider text-amber-300 font-extrabold block mb-1.5">
+              Daraus resultierende BGH-konforme Gesamtklausel:
+            </span>
+            <span className="text-amber-300">„Wenn ich mich im </span>
+            <span className="text-amber-100 underline decoration-amber-400 underline-offset-4">{WENN_EXAMPLES[selectedWennIdx]}</span>
+            <span className="text-amber-300"> befinde, </span>
+            <span className="text-emerald-300">dann </span>
+            <span className="text-emerald-100 underline decoration-emerald-400 underline-offset-4">{DANN_EXAMPLES[selectedDannIdx]}</span>
+            <span className="text-emerald-300">.“</span>
           </div>
         </div>
       </div>
 
       {/* Footer Navigation */}
-      <div className="flex justify-end no-print">
+      <div className="flex justify-end no-print pt-2">
         <button
           onClick={onNextPhase}
           className="px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm tracking-wide shadow-xs transition transform active:scale-95 flex items-center gap-2 cursor-pointer"

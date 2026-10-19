@@ -69,6 +69,9 @@ export interface CaseData {
   hintQuestion: string;
   officialProblem: string;
   officialSolution: string;
+  solution?: string;
+  flaw?: string;
+  didactics?: string;
   keyIssues: string[];
 }
 

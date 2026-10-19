@@ -32,7 +32,67 @@ export const PrintHandoutModal: React.FC<PrintHandoutModalProps> = ({ isOpen, on
               className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer"
             >
               <Printer className="w-4 h-4" />
-              <span>Jetzt drucken / als PDF speichern</span>
+              <span>Drucken / PDF</span>
+            </button>
+            <button
+              onClick={() => {
+                import('../utils/exportUtils').then(({ exportToWord }) => {
+                  exportToWord({
+                    title: 'Lernskript & Handout: Patientenverfügung – Strafrecht I',
+                    subtitle: 'Palliative Care III (CE08 U3) • Dozent: J. Rosenow • Literaturbasis: Großkopf & Klein',
+                    sections: [
+                      {
+                        heading: '1. Theorie-Übersicht: Die 4 Rechtsinstrumente',
+                        content: {
+                          '01a Betreuungsverfügung': 'Gerichtliche Anordnung; Vertretungsrecht des Betreuers erstreckt sich nicht auf den gesamten Rechtskreis. Nachrangig zu Vollmachten.',
+                          '01b Vorsorgevollmacht': 'Rechtsgeschäftlich; Bevollmächtigter wird zum Vertreter im Willen; Vorrang vor Betreuung (§ 1896 Abs. 2 BGB).',
+                          '01c Ehegatten-Notvertretungsrecht': '§ 1358 BGB seit 01.01.2023; Notfallvertretung für max. 6 Monate im Bereich Gesundheitssorge.',
+                          '01d Patientenverfügung': 'Medizinische Willenserklärung; wirkt aus sich heraus und ist sofort zu achten.',
+                        },
+                      },
+                      {
+                        heading: '2. Selbsterfahrung: Stolperstein-Protokoll',
+                        content: {
+                          'Gewählte Erstellungshilfe': data.toolsChosen || 'Keine Angabe',
+                          'Längster Zögerungspunkt': data.hesitationPoint || 'Keine Angabe',
+                          'Notierte Beispielsätze': data.ownPvSentences || 'Keine Angabe',
+                        },
+                      },
+                      {
+                        heading: '3. Tandem-Vergleich: 4 Leitfragen',
+                        content: {
+                          'Gemeinsamkeiten': data.comparisonQ1 || 'Keine Angabe',
+                          'Unterschiede': data.comparisonQ2 || 'Keine Angabe',
+                          'Was fehlt?': data.comparisonQ3 || 'Keine Angabe',
+                          'Nutzerfragen': data.comparisonQ4 || 'Keine Angabe',
+                        },
+                      },
+                      {
+                        heading: '4. Rechtlicher Rahmen & Stresstest',
+                        content: {
+                          'WENN-Kriterium': data.checklistSelf1 ? 'Erfüllt' : 'Nicht erfüllt',
+                          'DANN-Kriterium': data.checklistSelf2 ? 'Erfüllt' : 'Nicht erfüllt',
+                          'Vorsorgevollmacht kombiniert': data.checklistSelf3 ? 'Erfüllt' : 'Nicht erfüllt',
+                          'Fazit': data.selfCheckReflection || 'Keine Angabe',
+                        },
+                      },
+                      {
+                        heading: '5. Die 6 Praxisfälle (Rechts-Konsil)',
+                        content: Object.fromEntries(
+                          CASES_DATA.map((c) => [
+                            `Fall ${c.id}: ${c.title}`,
+                            `WENN: ${data.cases[c.id]?.wenn || '-'} | DANN: ${data.cases[c.id]?.dann || '-'} | Musterlösung: ${c.officialSolution}`,
+                          ])
+                        ),
+                      },
+                    ],
+                  }, 'patientenverfuegung_handout_lernskript.doc');
+                });
+              }}
+              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer"
+            >
+              <FileText className="w-4 h-4" />
+              <span>Word (.doc)</span>
             </button>
             <button
               onClick={onClose}

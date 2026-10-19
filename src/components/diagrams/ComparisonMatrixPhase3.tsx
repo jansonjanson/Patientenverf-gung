@@ -37,7 +37,7 @@ export const ComparisonMatrixPhase3: React.FC = () => {
       title: '4. Praxistauglichkeit für Pflegende',
       icon: <HelpCircle className="w-4 h-4 text-indigo-600" />,
       color: 'border-indigo-500 bg-indigo-50/50',
-      tag: 'Krankenbett-Realität',
+      tag: 'Akutsituation & Praxis-Realität',
       content: 'Ist der Wille nachts um 03:00 Uhr in 60 Sekunden für Notarzt und Pflegefachkraft erfassbar? Mehrseitige Textwüsten ohne Deckblatt oder Kernverfügung verzögern akute Notfallentscheidungen erheblich.',
       tandemTip: 'Würden Sie als Schichtleitung auf Basis des generierten Papiers sofort eine Reanimation abbrechen können?',
     },

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowRight, Lightbulb } from 'lucide-react';
-import { ComparisonMatrixPhase3 } from '../diagrams/ComparisonMatrixPhase3';
+import { ArrowRight, Lightbulb, Users } from 'lucide-react';
+import { StepTransition } from '../StepTransition';
+import { SaveExportBar } from '../SaveExportBar';
 
 interface Phase3TandemComparisonProps {
   q1: string;
@@ -22,151 +23,220 @@ export const Phase3TandemComparison: React.FC<Phase3TandemComparisonProps> = ({
   const [showInspirations, setShowInspirations] = useState(false);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* Phase Intro Banner */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-        <div className="space-y-2">
+      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col items-start gap-4">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
-            Doppelstunde 1 • Schritt 3
+            Doppelstunde 1 • Phase 3
           </span>
+          <span className="text-xs font-semibold text-slate-500">
+            Dauer: ca. 35 Minuten
+          </span>
+        </div>
+        <div className="space-y-2">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Systematischer Vergleich der Erstellungshilfen
+            Phase 3: Systematischer Tandem-Vergleich der Erstellungshilfen
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-3xl">
-            Vergleichen Sie die beiden Erstellungshilfen (Online-Generator vs. Textbausteine/Formulierungshilfen) miteinander und dokumentieren Sie Ihre Ergebnisse anhand der vier Leitfragen.
+          <p className="text-slate-700 text-sm sm:text-base leading-relaxed max-w-4xl">
+            Vergleichen Sie nun Ihre Ergebnisse im Tandem (Online-Generator von Person A vs. Textbausteine von Person B) direkt anhand der vier Leitfragen und halten Sie Ihre Erkenntnisse fest.
           </p>
         </div>
-
-        <button
-          onClick={() => setShowInspirations(!showInspirations)}
-          className="px-4 py-2.5 rounded-2xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold flex items-center gap-2 transition shrink-0 cursor-pointer no-print"
-        >
-          <Lightbulb className="w-4 h-4 text-amber-600" />
-          <span>{showInspirations ? 'Hinweise ausblenden' : 'Didaktische Impulse anzeigen'}</span>
-        </button>
       </div>
 
-      {/* Didaktisches Schaubild: 4-Dimensionen-Vergleichsmatrix (Tandem) */}
-      <ComparisonMatrixPhase3 />
+      {/* Transition directly to the 4 Leitfragen */}
+      <StepTransition
+        stepNumber="1"
+        title="Die 4 Leitfragen im Tandem beantworten & sichern"
+        hint="Gemeinsamkeiten, Unterschiede, Lücken & Fragen dokumentieren"
+        variant="blue"
+      />
 
-      {/* The 4 Questions Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Question 1 */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-3 flex flex-col justify-between">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2.5">
-              <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 font-extrabold text-sm flex items-center justify-center shrink-0 border border-blue-200">
-                1
-              </span>
-              <h3 className="font-bold text-slate-900 text-base">
-                Was gleicht sich? Was überschneidet sich? Was ähnelt sich?
-              </h3>
-            </div>
-            <p className="text-xs text-slate-500">
-              z. B. Struktur nach Situationen und Maßnahmen, Hinweis auf Vorsorgevollmacht, Palliativversorgung...
+      {/* The 4 Questions Grid Container */}
+      <div className="space-y-6">
+        {/* Step Header with Integrated "Didaktische Impulse" Button */}
+        <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
+              Schritt 1 • Tandem-Auswertung
+            </span>
+            <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">
+              Die 4 Leitfragen zur Gegenüberstellung
+            </h3>
+            <p className="text-sm text-slate-600 mt-1 font-medium">
+              Diskutieren Sie zu zweit und halten Sie Ihre Antworten in den vier Eingabefeldern fest:
             </p>
-            {showInspirations && (
-              <div className="text-[11px] text-blue-900 bg-blue-50 p-3 rounded-xl border border-blue-200 leading-relaxed">
-                💡 <em>Gemeinsamkeiten:</em> Beide trennen die Lebenssituation (Koma, Endstadium) von den medizinischen Maßnahmen; beide betonen Schriftform und Vertretung.
-              </div>
-            )}
           </div>
-          <textarea
-            rows={4}
-            value={q1}
-            onChange={(e) => onUpdateField('comparisonQ1', e.target.value)}
-            placeholder="Ihre Beobachtungen zu Gemeinsamkeiten..."
-            className="w-full px-4 py-3 rounded-2xl bg-white border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 mt-2"
-          />
+
+          {/* Integrated Didaktische Impulse Button & Tooltip / Explanatory Hint */}
+          <div className="flex flex-col items-start md:items-end gap-1.5 shrink-0 bg-amber-50/80 p-3.5 rounded-2xl border border-amber-300">
+            <button
+              onClick={() => setShowInspirations(!showInspirations)}
+              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs flex items-center gap-2 transition cursor-pointer shadow-2xs active:scale-95 no-print"
+            >
+              <Lightbulb className="w-4 h-4 text-slate-950" />
+              <span>{showInspirations ? 'Didaktische Impulse ausblenden' : 'Didaktische Impulse einblenden'}</span>
+            </button>
+            <span className="text-2xs text-amber-900 font-semibold max-w-xs text-left md:text-right">
+              💡 Blendet exemplarische Leitgedanken und Musterantworten zur Unterstützung ein.
+            </span>
+          </div>
         </div>
 
-        {/* Question 2 */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-3 flex flex-col justify-between">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2.5">
-              <span className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-800 font-extrabold text-sm flex items-center justify-center shrink-0 border border-indigo-200">
-                2
-              </span>
-              <h3 className="font-bold text-slate-900 text-base">
-                Was ist anders / unterschiedlich?
-              </h3>
-            </div>
-            <p className="text-xs text-slate-500">
-              z. B. Benutzerführung, didaktische Erklärungen vs. juristischer Gesetzestext, Detailgrad der Optionen...
-            </p>
-            {showInspirations && (
-              <div className="text-[11px] text-indigo-900 bg-indigo-50 p-3 rounded-xl border border-indigo-200 leading-relaxed">
-                💡 <em>Unterschiede:</em> Der Generator führt laienverständlich per Multiple-Choice durch Szenarien; die BMJ-Bausteine erfordern präzise juristische Textauswahl und juristische Selbstreflexion.
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Question 1 */}
+          <div className="bg-gradient-to-br from-blue-50/60 via-slate-50/30 to-white border-2 border-blue-200/90 hover:border-blue-300 rounded-3xl p-6 sm:p-7 shadow-xs space-y-4 flex flex-col justify-between transition">
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-3">
+                <span className="w-9 h-9 rounded-xl bg-blue-600 text-white font-black text-base flex items-center justify-center shrink-0 shadow-2xs">
+                  1
+                </span>
+                <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
+                  Was gleicht sich? Was überschneidet sich? Was ähnelt sich?
+                </h4>
               </div>
-            )}
+              <p className="text-sm text-slate-600 font-medium">
+                z. B. Struktur nach Situationen und Maßnahmen, Hinweis auf Vorsorgevollmacht, Palliativversorgung...
+              </p>
+              {showInspirations && (
+                <div className="text-sm text-blue-950 bg-blue-100/70 p-3.5 rounded-xl border border-blue-300 leading-relaxed font-medium animate-in fade-in">
+                  💡 <strong className="text-blue-900 font-bold">Gemeinsamkeiten:</strong> Beide trennen die Lebenssituation (Koma, Endstadium) von den medizinischen Maßnahmen; beide betonen Schriftform und Vertretung.
+                </div>
+              )}
+            </div>
+            <textarea
+              rows={4}
+              value={q1}
+              onChange={(e) => onUpdateField('comparisonQ1', e.target.value)}
+              placeholder="Ihre Beobachtungen zu Gemeinsamkeiten..."
+              className="w-full px-4 py-3.5 rounded-2xl bg-white border border-slate-300 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 font-medium mt-2 leading-relaxed"
+            />
           </div>
-          <textarea
-            rows={4}
-            value={q2}
-            onChange={(e) => onUpdateField('comparisonQ2', e.target.value)}
-            placeholder="Ihre Beobachtungen zu Unterschieden..."
-            className="w-full px-4 py-3 rounded-2xl bg-white border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 mt-2"
-          />
+
+          {/* Question 2 */}
+          <div className="bg-gradient-to-br from-indigo-50/60 via-slate-50/30 to-white border-2 border-indigo-200/90 hover:border-indigo-300 rounded-3xl p-6 sm:p-7 shadow-xs space-y-4 flex flex-col justify-between transition">
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-3">
+                <span className="w-9 h-9 rounded-xl bg-indigo-600 text-white font-black text-base flex items-center justify-center shrink-0 shadow-2xs">
+                  2
+                </span>
+                <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
+                  Was ist anders / unterschiedlich?
+                </h4>
+              </div>
+              <p className="text-sm text-slate-600 font-medium">
+                z. B. Benutzerführung, didaktische Erklärungen vs. juristischer Gesetzestext, Detailgrad der Optionen...
+              </p>
+              {showInspirations && (
+                <div className="text-sm text-indigo-950 bg-indigo-100/70 p-3.5 rounded-xl border border-indigo-300 leading-relaxed font-medium animate-in fade-in">
+                  💡 <strong className="text-indigo-900 font-bold">Unterschiede:</strong> Der Generator führt laienverständlich per Multiple-Choice durch Szenarien; die BMJ-Bausteine erfordern eigenständige juristische Textauswahl.
+                </div>
+              )}
+            </div>
+            <textarea
+              rows={4}
+              value={q2}
+              onChange={(e) => onUpdateField('comparisonQ2', e.target.value)}
+              placeholder="Ihre Beobachtungen zu Unterschieden..."
+              className="w-full px-4 py-3.5 rounded-2xl bg-white border border-slate-300 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 font-medium mt-2 leading-relaxed"
+            />
+          </div>
+
+          {/* Question 3 */}
+          <div className="bg-gradient-to-br from-amber-50/60 via-slate-50/30 to-white border-2 border-amber-200/90 hover:border-amber-300 rounded-3xl p-6 sm:p-7 shadow-xs space-y-4 flex flex-col justify-between transition">
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-3">
+                <span className="w-9 h-9 rounded-xl bg-amber-600 text-white font-black text-base flex items-center justify-center shrink-0 shadow-2xs">
+                  3
+                </span>
+                <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
+                  Was fehlt? Was müsste ergänzt werden?
+                </h4>
+              </div>
+              <p className="text-sm text-slate-600 font-medium">
+                z. B. spezifische Krankheitsbilder, konkrete pflegerische Maßnahmen, Beratungshinweis, Notfallkarte...
+              </p>
+              {showInspirations && (
+                <div className="text-sm text-amber-950 bg-amber-100/70 p-3.5 rounded-xl border border-amber-300 leading-relaxed font-medium animate-in fade-in">
+                  💡 <strong className="text-amber-900 font-bold">Blinde Flecken:</strong> Was passiert im akuten Notfall vor Ort (Notarzt-Reanimation vor Einsicht in die Verfügung)? Aufbewahrung des Dokuments?
+                </div>
+              )}
+            </div>
+            <textarea
+              rows={4}
+              value={q3}
+              onChange={(e) => onUpdateField('comparisonQ3', e.target.value)}
+              placeholder="Blinde Flecken & Ergänzungsbedarf..."
+              className="w-full px-4 py-3.5 rounded-2xl bg-white border border-slate-300 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 font-medium mt-2 leading-relaxed"
+            />
+          </div>
+
+          {/* Question 4 */}
+          <div className="bg-gradient-to-br from-rose-50/60 via-slate-50/30 to-white border-2 border-rose-200/90 hover:border-rose-300 rounded-3xl p-6 sm:p-7 shadow-xs space-y-4 flex flex-col justify-between transition">
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-3">
+                <span className="w-9 h-9 rounded-xl bg-rose-600 text-white font-black text-base flex items-center justify-center shrink-0 shadow-2xs">
+                  4
+                </span>
+                <h4 className="font-extrabold text-slate-900 text-lg leading-snug">
+                  Welche Fragen ergeben sich für Sie als Nutzer:in?
+                </h4>
+              </div>
+              <p className="text-sm text-slate-600 font-medium">
+                z. B. „Was bedeutet ‚unmittelbarer Sterbeprozess‘ genau?“, „Wer legt meine Verfügung im Notfall aus?“
+              </p>
+              {showInspirations && (
+                <div className="text-sm text-rose-950 bg-rose-100/70 p-3.5 rounded-xl border border-rose-300 leading-relaxed font-medium animate-in fade-in">
+                  💡 <strong className="text-rose-900 font-bold">Nutzerperspektive:</strong> Kann ich mir heute als gesunder Mensch wirklich vorstellen, was ich im Stadium schwerer Demenz noch empfinde?
+                </div>
+              )}
+            </div>
+            <textarea
+              rows={4}
+              value={q4}
+              onChange={(e) => onUpdateField('comparisonQ4', e.target.value)}
+              placeholder="Offene Fragen aus Laien- und Nutzerperspektive..."
+              className="w-full px-4 py-3.5 rounded-2xl bg-white border border-slate-300 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 font-medium mt-2 leading-relaxed"
+            />
+          </div>
         </div>
 
-        {/* Question 3 */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-3 flex flex-col justify-between">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2.5">
-              <span className="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 font-extrabold text-sm flex items-center justify-center shrink-0 border border-amber-200">
-                3
-              </span>
-              <h3 className="font-bold text-slate-900 text-base">
-                Was fehlt? Was müsste ergänzt werden?
-              </h3>
-            </div>
-            <p className="text-xs text-slate-500">
-              z. B. spezifische Krankheitsbilder, konkrete pflegerische Maßnahmen, Beratungshinweis, Notfallkarte...
-            </p>
-            {showInspirations && (
-              <div className="text-[11px] text-amber-900 bg-amber-50 p-3 rounded-xl border border-amber-200 leading-relaxed">
-                💡 <em>Blinde Flecken:</em> Was passiert im akuten Notfall vor Ort (Notarzt-Reanimation vor Einsicht in die Verfügung)? Aufbewahrung des Dokuments?
-              </div>
-            )}
-          </div>
-          <textarea
-            rows={4}
-            value={q3}
-            onChange={(e) => onUpdateField('comparisonQ3', e.target.value)}
-            placeholder="Blinde Flecken & Ergänzungsbedarf..."
-            className="w-full px-4 py-3 rounded-2xl bg-white border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 mt-2"
-          />
-        </div>
-
-        {/* Question 4 */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-3 flex flex-col justify-between">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2.5">
-              <span className="w-8 h-8 rounded-xl bg-rose-100 text-rose-800 font-extrabold text-sm flex items-center justify-center shrink-0 border border-rose-200">
-                4
-              </span>
-              <h3 className="font-bold text-slate-900 text-base">
-                Welche Fragen ergeben sich für Sie als Nutzer:in?
-              </h3>
-            </div>
-            <p className="text-xs text-slate-500">
-              z. B. „Was bedeutet ‚unmittelbarer Sterbeprozess‘ genau?“, „Wer legt meine Verfügung im Notfall aus?“
-            </p>
-            {showInspirations && (
-              <div className="text-[11px] text-rose-900 bg-rose-50 p-3 rounded-xl border border-rose-200 leading-relaxed">
-                💡 <em>Nutzerperspektive:</em> Kann ich mir heute als gesunder Mensch wirklich vorstellen, was ich im Stadium schwerer Demenz noch empfinde?
-              </div>
-            )}
-          </div>
-          <textarea
-            rows={4}
-            value={q4}
-            onChange={(e) => onUpdateField('comparisonQ4', e.target.value)}
-            placeholder="Offene Fragen aus Laien- und Nutzerperspektive..."
-            className="w-full px-4 py-3 rounded-2xl bg-white border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 mt-2"
-          />
-        </div>
+        {/* Speichern & Export Bar for Phase 3 */}
+        <SaveExportBar
+          filenamePrefix="phase3_tandem_vergleich"
+          label="Tandem-Vergleich sichern:"
+          exportData={{
+            title: 'Phase 3: Tandem-Vergleich der Erstellungshilfen',
+            subtitle: 'Online-Generator vs. BMJ-Textbausteine (4 Leitfragen)',
+            sections: [
+              {
+                heading: '1. Gemeinsamkeiten & Überschneidungen',
+                content: q1 || '(Noch keine Eingabe)',
+              },
+              {
+                heading: '2. Unterschiede & Benutzerführung',
+                content: q2 || '(Noch keine Eingabe)',
+              },
+              {
+                heading: '3. Blinde Flecken & Ergänzungsbedarf',
+                content: q3 || '(Noch keine Eingabe)',
+              },
+              {
+                heading: '4. Offene Fragen aus Nutzerperspektive',
+                content: q4 || '(Noch keine Eingabe)',
+              },
+            ],
+          }}
+        />
       </div>
+
+      {/* Transition to Plenum Stopp */}
+      <StepTransition
+        stepNumber="2"
+        title="Plenum-Auswertung & Wechsel zu Doppelstunde 2"
+        hint="Erfahrungen zusammentragen vor dem Start des Rechtsrahmens"
+        variant="amber"
+      />
 
       {/* PLENUM STOPP 2 */}
       <div className="bg-amber-50/80 border-2 border-amber-300 rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row items-center justify-between gap-5 shadow-xs">
@@ -178,7 +248,7 @@ export const Phase3TandemComparison: React.FC<Phase3TandemComparisonProps> = ({
             <h4 className="font-extrabold text-amber-900 text-base uppercase tracking-wide">
               Plenum-Stopp 2: Auswertung der Generatoren & Übergang in Doppelstunde 2
             </h4>
-            <p className="text-xs sm:text-sm text-amber-800 mt-1 leading-relaxed max-w-2xl">
+            <p className="text-xs sm:text-sm text-amber-800 mt-1 leading-relaxed max-w-2xl font-medium">
               Wir sammeln Ihre Erfahrungen im Kurs: Wie herausfordernd war das Formulieren – und was bedeutet das für Patient:innen und Angehörige ohne medizinisches Fachwissen?
             </p>
           </div>

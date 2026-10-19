@@ -75,7 +75,7 @@ export const DecisionTreePhase1: React.FC = () => {
           </div>
           <div>
             <h4 className="text-base font-bold text-slate-900">
-              Didaktisches Schaubild: Wer darf am Krankenbett entscheiden?
+              Didaktisches Schaubild: Wer darf in der Akutsituation am Behandlungsort entscheiden?
             </h4>
             <p className="text-xs text-slate-500">
               Interaktive Entscheidungsmatrix & Abgrenzung nach Großkopf & Klein (2019a, 2019b)
@@ -216,7 +216,7 @@ export const DecisionTreePhase1: React.FC = () => {
             <p className="text-slate-700 leading-relaxed">{selected.bindingPower}</p>
           </div>
           <div className="bg-white/80 p-3 rounded-lg border border-slate-200">
-            <span className="font-bold text-slate-900 block mb-1">Entscheidungsregel am Krankenbett:</span>
+            <span className="font-bold text-slate-900 block mb-1">Entscheidungsregel am Behandlungsort:</span>
             <p className="text-slate-700 leading-relaxed">{selected.coreRule}</p>
           </div>
         </div>

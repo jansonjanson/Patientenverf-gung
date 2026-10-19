@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { CheckCircle2, AlertTriangle, ArrowRight, BookOpen, Scale, Sparkles } from 'lucide-react';
+import { CheckCircle2, ArrowRight, Scale, Sparkles, ChevronRight, Zap } from 'lucide-react';
 
 export const LegalChecklistFlowPhase4: React.FC = () => {
   const [activeReq, setActiveReq] = useState<number>(1);
+  const [viewedReqs, setViewedReqs] = useState<number[]>([1]);
   const [activeFormulaPart, setActiveFormulaPart] = useState<'wenn' | 'dann'>('wenn');
 
   const requirements = [
@@ -58,7 +59,7 @@ export const LegalChecklistFlowPhase4: React.FC = () => {
       details: 'Eine Patientenverfügung kann jederzeit formlos widerrufen werden – auch mündlich oder durch schlüssiges Verhalten.',
       bulletPoints: [
         'Keine konkreten Anhaltspunkte, dass der Verfasser seinen Willen zwischenzeitlich geändert hat.',
-        'Widerruf bedarf keiner Schriftform; geäußerte Abwehr am Krankenbett hat immer Vorrang.',
+        'Widerruf bedarf keiner Schriftform; geäußerte Abwehr in der Behandlungssituation hat immer Vorrang.',
       ],
       legalNote: 'Regelmäßige Erneuerung der Unterschrift (z. B. alle 2 Jahre) ist rechtlich nicht Pflicht, aber beweiskräftig.',
     },
@@ -75,96 +76,167 @@ export const LegalChecklistFlowPhase4: React.FC = () => {
     },
   ];
 
+  const handleSelectReq = (num: number) => {
+    setActiveReq(num);
+    if (!viewedReqs.includes(num)) {
+      setViewedReqs([...viewedReqs, num]);
+    }
+  };
+
+  const handleNextReq = () => {
+    const nextNum = activeReq < 6 ? activeReq + 1 : 1;
+    handleSelectReq(nextNum);
+  };
+
   const current = requirements.find((r) => r.num === activeReq) || requirements[0];
+  const nextUnviewed = requirements.find((r) => !viewedReqs.includes(r.num))?.num;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-5 md:p-6 shadow-sm mb-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100 mb-5">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-700">
-            <Scale className="w-4 h-4" />
+    <div className="bg-white rounded-3xl border-2 border-blue-200/90 p-5 md:p-7 shadow-xs mb-6 space-y-6">
+      {/* Header with Progress Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-blue-100 border border-blue-300 flex items-center justify-center text-blue-700 shrink-0">
+            <Scale className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-base font-bold text-slate-900">
-              Didaktisches Schaubild: Die 6 Voraussetzungen nach Großkopf & Klein
+            <h4 className="text-lg font-black text-slate-900">
+              Didaktisches Prüfschema: Die 6 Voraussetzungen (Großkopf & Klein)
             </h4>
-            <p className="text-xs text-slate-500">
-              Juristisches Prüfschema für die Bindungswirkung am Krankenbett (2019a, 2019b)
+            <p className="text-xs text-slate-600 font-medium">
+              Klicken Sie nacheinander auf alle 6 Kacheln, um das juristische Prüfschema vollständig zu erfassen.
             </p>
           </div>
         </div>
-        <span className="text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full self-start sm:self-auto">
-          Interaktives Prüfschema
-        </span>
+
+        {/* Progress Counter */}
+        <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 px-3.5 py-1.5 rounded-full self-start sm:self-auto">
+          <span className="text-xs font-bold text-blue-900">
+            Gelernt: {viewedReqs.length} / 6 Kriterien
+          </span>
+          <div className="w-16 h-2 bg-blue-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-blue-600 transition-all duration-300"
+              style={{ width: `${(viewedReqs.length / 6) * 100}%` }}
+            />
+          </div>
+        </div>
       </div>
 
-      {/* 6 Step Sequence Flow */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 mb-4">
+      {/* 6 Step Sequence Flow with Interactive Pulse & Arrows */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
         {requirements.map((r) => {
           const isActive = activeReq === r.num;
+          const isViewed = viewedReqs.includes(r.num);
+          const isNextTarget = r.num === nextUnviewed;
+
           return (
             <button
               key={r.num}
               type="button"
-              onClick={() => setActiveReq(r.num)}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
+              onClick={() => handleSelectReq(r.num)}
+              className={`p-3 rounded-2xl border-2 text-left transition-all relative group cursor-pointer ${
                 isActive
-                  ? 'border-blue-600 bg-blue-50 shadow ring-2 ring-blue-200'
-                  : 'border-slate-200 hover:border-slate-300 bg-white'
+                  ? 'border-blue-600 bg-blue-50 shadow-md ring-2 ring-blue-200 scale-[1.02]'
+                  : isNextTarget
+                  ? 'border-amber-400 bg-amber-50/80 shadow-xs animate-pulse ring-2 ring-amber-300'
+                  : isViewed
+                  ? 'border-slate-200 bg-white hover:border-slate-300'
+                  : 'border-blue-200 bg-blue-50/30 hover:border-blue-300'
               }`}
             >
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center justify-between mb-1.5">
                 <span
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold ${
-                    isActive ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700'
+                  className={`w-6 h-6 rounded-xl flex items-center justify-center text-xs font-black ${
+                    isActive
+                      ? 'bg-blue-600 text-white'
+                      : isViewed
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      : 'bg-amber-100 text-amber-900 border border-amber-300'
                   }`}
                 >
                   {r.num}
                 </span>
-                {isActive && <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />}
+
+                {isViewed ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                ) : isNextTarget ? (
+                  <span className="text-[10px] font-black uppercase text-amber-900 bg-amber-200 px-1.5 py-0.5 rounded">
+                    Hier!
+                  </span>
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-blue-500" />
+                )}
               </div>
-              <p className="text-[11px] font-bold text-slate-900 line-clamp-1">{r.title}</p>
+
+              <p className="text-xs font-black text-slate-900 line-clamp-2 leading-snug">
+                {r.title}
+              </p>
+
+              {!isViewed && (
+                <span className="text-[10px] text-blue-700 font-bold block mt-1.5 underline decoration-blue-400">
+                  Details ansehen ➔
+                </span>
+              )}
             </button>
           );
         })}
       </div>
 
       {/* Requirement Details Box */}
-      <div className="bg-blue-50/40 border border-blue-200 rounded-xl p-4 text-xs mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 mb-2 border-b border-blue-200/80">
-          <div className="flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+      <div className="bg-gradient-to-br from-blue-50/80 via-slate-50/40 to-white border-2 border-blue-200 rounded-3xl p-5 sm:p-6 text-xs sm:text-sm space-y-4 shadow-2xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-blue-200">
+          <div className="flex items-center gap-3">
+            <span className="w-8 h-8 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black text-sm shadow-2xs">
               {current.num}
             </span>
-            <span className="font-bold text-slate-900 text-sm">{current.title}</span>
+            <div>
+              <span className="text-xs font-bold text-blue-800 uppercase tracking-wider block">
+                Voraussetzung 0{current.num} von 06
+              </span>
+              <h5 className="font-extrabold text-slate-900 text-base">{current.title}</h5>
+            </div>
           </div>
-          <span className="text-slate-500 font-medium">{current.sub}</span>
+
+          <div className="flex items-center gap-2">
+            <span className="text-slate-500 text-xs font-semibold">{current.sub}</span>
+            <button
+              onClick={handleNextReq}
+              className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-2xs active:scale-95 cursor-pointer no-print"
+            >
+              <span>Nächstes Kriterium</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
-        <p className="text-slate-700 mb-2 leading-relaxed">{current.details}</p>
-        <ul className="space-y-1.5 mb-3">
+
+        <p className="text-slate-800 font-medium leading-relaxed">{current.details}</p>
+
+        <ul className="space-y-2">
           {current.bulletPoints.map((bp, i) => (
-            <li key={i} className="flex items-start gap-2 text-slate-800">
-              <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
+            <li key={i} className="flex items-start gap-2.5 text-slate-900 font-medium bg-white/90 p-3 rounded-2xl border border-blue-100 shadow-2xs">
+              <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
               <span>{bp}</span>
             </li>
           ))}
         </ul>
-        <div className="bg-white/90 p-2.5 rounded-lg border border-blue-200 text-slate-700 font-medium">
-          ⚖️ {current.legalNote}
+
+        <div className="bg-amber-50 p-3.5 rounded-2xl border border-amber-300 text-amber-950 font-medium leading-relaxed flex items-start gap-2.5">
+          <Zap className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+          <span><strong>Rechtliche Konsequenz:</strong> {current.legalNote}</span>
         </div>
       </div>
 
       {/* WENN-DANN Formula Interactive Box */}
-      <div className="border border-slate-200 bg-slate-50 rounded-xl p-4">
-        <div className="flex items-center justify-between mb-3">
+      <div className="border-2 border-slate-200 bg-slate-50/90 rounded-3xl p-5 space-y-4">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-500" />
             <h5 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-              Kapitel 03: Die juristische WENN-DANN-Formel
+              BGH-Formel: Das Bestimmtheitsgebot im Detail
             </h5>
           </div>
-          <span className="text-[11px] text-slate-500">Klicken Sie zum Vertiefen</span>
+          <span className="text-2xs text-slate-500 font-medium">Unerlässlich für die Rechtswirksamkeit</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -172,22 +244,22 @@ export const LegalChecklistFlowPhase4: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveFormulaPart('wenn')}
-            className={`p-3 rounded-xl border-2 text-left transition-all ${
+            className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
               activeFormulaPart === 'wenn'
-                ? 'border-indigo-600 bg-white shadow ring-2 ring-indigo-200'
-                : 'border-slate-200 bg-white/70 hover:border-slate-300'
+                ? 'border-amber-500 bg-white shadow-md ring-2 ring-amber-200'
+                : 'border-slate-200 bg-white/80 hover:border-slate-300'
             }`}
           >
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-black uppercase text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded">
-                WENN (Krankheitszustand)
+              <span className="text-xs font-black uppercase text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-lg border border-amber-300">
+                1. WENN (Glied)
               </span>
-              <span className="text-[11px] text-slate-500 font-medium">Bestimmtheitsgebot</span>
+              <span className="text-2xs text-slate-500 font-medium">Behandlungszustand</span>
             </div>
-            <p className="text-xs font-bold text-slate-900 mb-1">
-              Bezug auf ein konkretes, behandlungsbedürftiges Krankheitsbild
+            <p className="text-xs font-extrabold text-slate-900 mb-1">
+              Bezug auf ein konkretes Krankheitsbild
             </p>
-            <p className="text-[11px] text-slate-600 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed font-medium">
               Muss medizinisch klar abgrenzbar sein (z. B. unheilbare terminale Erkrankung, irreversibles Koma, schwerste Hirnschädigung).
             </p>
           </button>
@@ -196,22 +268,22 @@ export const LegalChecklistFlowPhase4: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveFormulaPart('dann')}
-            className={`p-3 rounded-xl border-2 text-left transition-all ${
+            className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
               activeFormulaPart === 'dann'
-                ? 'border-emerald-600 bg-white shadow ring-2 ring-emerald-200'
-                : 'border-slate-200 bg-white/70 hover:border-slate-300'
+                ? 'border-emerald-500 bg-white shadow-md ring-2 ring-emerald-200'
+                : 'border-slate-200 bg-white/80 hover:border-slate-300'
             }`}
           >
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-black uppercase text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
-                DANN (Handlungs-Szenario)
+              <span className="text-xs font-black uppercase text-emerald-900 bg-emerald-100 px-2.5 py-0.5 rounded-lg border border-emerald-300">
+                2. DANN (Glied)
               </span>
-              <span className="text-[11px] text-slate-500 font-medium">Einwilligung / Verzicht</span>
+              <span className="text-2xs text-slate-500 font-medium">Rechtsfolge / Maßnahme</span>
             </div>
-            <p className="text-xs font-bold text-slate-900 mb-1">
-              Konkrete Anweisung zu pflegerischen & ärztlichen Maßnahmen
+            <p className="text-xs font-extrabold text-slate-900 mb-1">
+              Konkrete Anweisung zu Eingriffen
             </p>
-            <p className="text-[11px] text-slate-600 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed font-medium">
               Im Voraus erklärte (Nicht-)Einwilligung zu Heileingriffen (künstliche Beatmung, PEG/Sondenernährung, Dialyse, Reanimation).
             </p>
           </button>

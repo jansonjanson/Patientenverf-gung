@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export interface CaseState {
   wenn: string;
@@ -21,6 +21,7 @@ export interface ClassroomData {
   // Step 2
   toolsChosen: string;
   hesitationPoint: string;
+  creationInsights: string;
   ownPvSentences: string;
   // Step 3
   comparisonQ1: string;
@@ -35,7 +36,7 @@ export interface ClassroomData {
   // Step 6
   cases: Record<number, CaseState>;
   // Global Settings
-  audioEnabled: boolean; // default false = muted!
+  audioEnabled: boolean;
   beamerMode: boolean;
   teacherMode: boolean;
   lastUpdated: string;
@@ -60,6 +61,7 @@ const DEFAULT_STATE: ClassroomData = {
   customVideoUrl: 'https://youtu.be/Vh1T5booFvY?si=wLR32cqG4ojV-hsW',
   toolsChosen: '',
   hesitationPoint: '',
+  creationInsights: '',
   ownPvSentences: '',
   comparisonQ1: '',
   comparisonQ2: '',
@@ -70,13 +72,13 @@ const DEFAULT_STATE: ClassroomData = {
   checklistSelf3: false,
   selfCheckReflection: '',
   cases: DEFAULT_CASES,
-  audioEnabled: false, // Standardwert zwingend stummgeschaltet!
+  audioEnabled: false,
   beamerMode: false,
   teacherMode: false,
   lastUpdated: new Date().toISOString(),
 };
 
-// Strict key requested by user for local student isolation
+// Local storage key for persistent offline learning
 export const STUDENT_STORAGE_KEY = 'pv_strafrecht_student_state_v1';
 const USER_ID_KEY = 'pv_strafrecht_student_uid';
 
@@ -85,12 +87,10 @@ export function useClassroomSync() {
   const [isOnline, setIsOnline] = useState<boolean>(
     typeof navigator !== 'undefined' ? navigator.onLine : true
   );
-  // Status is kept friendly: 'lokal-gesichert' or 'synchronisiert'
-  const [syncStatus, setSyncStatus] = useState<'synced' | 'local' | 'offline'>('local');
+  const [syncStatus] = useState<'local'>('local');
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
-  const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Initialize from LocalStorage (guaranteed offline & multi-user safe)
+  // Initialize from LocalStorage (purely local, safe and isolated per device)
   useEffect(() => {
     let uid = '';
     try {
@@ -112,7 +112,6 @@ export function useClassroomSync() {
           ...initialData,
           ...parsed,
           userId: uid,
-          // ensure default muted if not explicitly set
           audioEnabled: parsed.audioEnabled === true,
           cases: { ...DEFAULT_CASES, ...(parsed.cases || {}) },
         };
@@ -124,32 +123,8 @@ export function useClassroomSync() {
     setData(initialData);
     setIsInitialized(true);
 
-    // Silent background sync check (if hosted with backend, otherwise ignored without error)
-    if (typeof navigator !== 'undefined' && navigator.onLine) {
-      fetch(`/api/health`, { method: 'GET' })
-        .then((res) => {
-          if (res.ok) {
-            setSyncStatus('synced');
-          } else {
-            setSyncStatus('local');
-          }
-        })
-        .catch(() => {
-          // Static hosting (Netlify / GitHub Pages) -> silent fallback to local!
-          setSyncStatus('local');
-        });
-    } else {
-      setSyncStatus('offline');
-    }
-
-    const handleOnline = () => {
-      setIsOnline(true);
-      setSyncStatus('local');
-    };
-    const handleOffline = () => {
-      setIsOnline(false);
-      setSyncStatus('offline');
-    };
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -160,59 +135,18 @@ export function useClassroomSync() {
     };
   }, []);
 
-  // Update data: immediately saves to localStorage, with silent non-blocking server ping if available
+  // Update data: immediately and reliably saves to localStorage
   const updateData = useCallback(
     (updater: Partial<ClassroomData> | ((prev: ClassroomData) => ClassroomData)) => {
       setData((prev) => {
         const next = typeof updater === 'function' ? updater(prev) : { ...prev, ...updater };
         next.lastUpdated = new Date().toISOString();
 
-        // 1. Save immediately to LocalStorage under 'pv_strafrecht_student_state_v1'
+        // Save immediately to LocalStorage under 'pv_strafrecht_student_state_v1'
         try {
           localStorage.setItem(STUDENT_STORAGE_KEY, JSON.stringify(next));
         } catch (e) {
           console.warn('LocalStorage save error:', e);
-        }
-
-        // 2. Silent optional background telemetry to /api/progress if backend exists (never blocks UI)
-        if (typeof navigator !== 'undefined' && navigator.onLine) {
-          if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
-          syncTimeoutRef.current = setTimeout(() => {
-            fetch(`/api/progress/${next.userId}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userId: next.userId,
-                userName: next.userName,
-                currentPhase: next.currentPhase,
-                quizCompleted: next.quizSubmitted,
-                quizScore: next.quizScore,
-                casesProgress: next.cases,
-                answers: {
-                  q1: next.comparisonQ1,
-                  q2: next.comparisonQ2,
-                  q3: next.comparisonQ3,
-                  q4: next.comparisonQ4,
-                  toolsChosen: next.toolsChosen,
-                  hesitationPoint: next.hesitationPoint,
-                  ownPvSentences: next.ownPvSentences,
-                  selfCheckReflection: next.selfCheckReflection,
-                },
-                checklists: {
-                  c1: next.checklistSelf1,
-                  c2: next.checklistSelf2,
-                  c3: next.checklistSelf3,
-                },
-              }),
-            })
-              .then((res) => {
-                if (res.ok) setSyncStatus('synced');
-              })
-              .catch(() => {
-                // Silent fallback on static hosts (Netlify/GitHub Pages)
-                setSyncStatus('local');
-              });
-          }, 1200);
         }
 
         return next;
