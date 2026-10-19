@@ -11,8 +11,7 @@ import { TeacherModal } from './components/TeacherModal';
 import { PrintHandoutModal } from './components/PrintHandoutModal';
 import { useClassroomSync, CaseState } from './hooks/useClassroomSync';
 import { computeOverallProgress } from './utils/legal-learning';
-import { sounds } from './utils/audio';
-import { WifiOff, Award, Sparkles } from 'lucide-react';
+import { WifiOff, Award } from 'lucide-react';
 
 export default function App() {
   const { data, updateData, isOnline, syncStatus, isInitialized, resetAll } = useClassroomSync();
@@ -29,20 +28,6 @@ export default function App() {
       });
     }
   }, []);
-
-  // Sync sound settings with audio utility
-  useEffect(() => {
-    sounds.enabled = data.audioEnabled;
-  }, [data.audioEnabled]);
-
-  // Sync beamer mode CSS class on body
-  useEffect(() => {
-    if (data.beamerMode) {
-      document.body.classList.add('beamer-presentation-mode');
-    } else {
-      document.body.classList.remove('beamer-presentation-mode');
-    }
-  }, [data.beamerMode]);
 
   // Compute overall progress & achievements
   const casesCompletedCount = Object.values(data.cases || {}).filter((c) => c.completed).length;
@@ -75,7 +60,6 @@ export default function App() {
     ) {
       const latest = progressMetrics.achievements[progressMetrics.achievements.length - 1];
       setShowAchievementToast(latest);
-      sounds.playTriumph();
       const timer = setTimeout(() => setShowAchievementToast(null), 3500);
       return () => clearTimeout(timer);
     }
@@ -121,9 +105,9 @@ export default function App() {
 
   if (!isInitialized) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">
-        <div className="flex items-center gap-3 text-slate-400 text-sm">
-          <div className="w-5 h-5 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-800">
+        <div className="flex items-center gap-3 text-slate-600 text-sm">
+          <div className="w-5 h-5 rounded-full border-2 border-blue-600 border-t-transparent animate-spin" />
           <span>Lade Guided Classroom...</span>
         </div>
       </div>
@@ -131,16 +115,12 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white">
       {/* Header */}
       <Header
         progressPercentage={progressMetrics.percentage}
         syncStatus={syncStatus}
         isOnline={isOnline}
-        beamerMode={data.beamerMode}
-        onToggleBeamerMode={() => updateData({ beamerMode: !data.beamerMode })}
-        audioEnabled={data.audioEnabled}
-        onToggleAudio={() => updateData({ audioEnabled: !data.audioEnabled })}
         teacherMode={data.teacherMode}
         onOpenTeacherModal={() => setIsTeacherModalOpen(true)}
         onPrint={() => setIsPrintModalOpen(true)}
@@ -217,22 +197,22 @@ export default function App() {
 
       {/* Offline Toast Banner */}
       {!isOnline && (
-        <div className="fixed bottom-5 left-5 z-40 bg-amber-950/90 border border-amber-500/50 text-amber-200 px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-3 backdrop-blur-md animate-in slide-in-from-bottom-2 duration-300">
-          <WifiOff className="w-4 h-4 text-amber-400 animate-pulse" />
+        <div className="fixed bottom-5 left-5 z-40 bg-amber-50 border border-amber-300 text-amber-900 px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-3 animate-in slide-in-from-bottom-2 duration-300">
+          <WifiOff className="w-4 h-4 text-amber-600 animate-pulse" />
           <div className="text-xs">
-            <span className="font-bold">Offline-Modus aktiv:</span> Eingaben werden lokal auf diesem Gerät gespeichert und bei erneuter Verbindung automatisch synchronisiert.
+            <span className="font-bold">Offline-Modus aktiv:</span> Eingaben werden lokal auf diesem Gerät gespeichert.
           </div>
         </div>
       )}
 
       {/* Achievement Unlock Toast Notification */}
       {showAchievementToast && (
-        <div className="fixed bottom-5 right-5 z-50 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-blue-400/30 animate-in slide-in-from-bottom-3 duration-300">
-          <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+        <div className="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 border border-slate-700 animate-in slide-in-from-bottom-3 duration-300">
+          <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
             <Award className="w-5 h-5 text-amber-300" />
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-wider font-extrabold text-blue-200">
+            <div className="text-[11px] uppercase tracking-wider font-extrabold text-blue-300">
               Erfolg freigeschaltet!
             </div>
             <div className="text-xs font-bold">{showAchievementToast}</div>

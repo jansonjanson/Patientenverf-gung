@@ -34,8 +34,8 @@ export interface ClassroomData {
   selfCheckReflection: string;
   // Step 6
   cases: Record<number, CaseState>;
-  // Global
-  audioEnabled: boolean;
+  // Global Settings
+  audioEnabled: boolean; // default false = muted!
   beamerMode: boolean;
   teacherMode: boolean;
   lastUpdated: string;
@@ -57,7 +57,7 @@ const DEFAULT_STATE: ClassroomData = {
   quizAnswers: {},
   quizSubmitted: false,
   quizScore: 0,
-  customVideoUrl: '',
+  customVideoUrl: 'https://youtu.be/Vh1T5booFvY?si=wLR32cqG4ojV-hsW',
   toolsChosen: '',
   hesitationPoint: '',
   ownPvSentences: '',
@@ -70,75 +70,81 @@ const DEFAULT_STATE: ClassroomData = {
   checklistSelf3: false,
   selfCheckReflection: '',
   cases: DEFAULT_CASES,
-  audioEnabled: true,
+  audioEnabled: false, // Standardwert zwingend stummgeschaltet!
   beamerMode: false,
   teacherMode: false,
   lastUpdated: new Date().toISOString(),
 };
 
-const LOCAL_STORAGE_KEY = 'guided_classroom_state_v2';
-const USER_ID_KEY = 'guided_classroom_user_id';
+// Strict key requested by user for local student isolation
+export const STUDENT_STORAGE_KEY = 'pv_strafrecht_student_state_v1';
+const USER_ID_KEY = 'pv_strafrecht_student_uid';
 
 export function useClassroomSync() {
   const [data, setData] = useState<ClassroomData>(DEFAULT_STATE);
-  const [isOnline, setIsOnline] = useState<boolean>(typeof navigator !== 'undefined' ? navigator.onLine : true);
-  const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'offline' | 'saved-offline' | 'error'>('synced');
+  const [isOnline, setIsOnline] = useState<boolean>(
+    typeof navigator !== 'undefined' ? navigator.onLine : true
+  );
+  // Status is kept friendly: 'lokal-gesichert' or 'synchronisiert'
+  const [syncStatus, setSyncStatus] = useState<'synced' | 'local' | 'offline'>('local');
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Initialize User ID and load local storage
+  // Initialize from LocalStorage (guaranteed offline & multi-user safe)
   useEffect(() => {
-    let uid = localStorage.getItem(USER_ID_KEY);
-    if (!uid) {
-      uid = 'user_' + Math.random().toString(36).substring(2, 9);
-      localStorage.setItem(USER_ID_KEY, uid);
+    let uid = '';
+    try {
+      uid = localStorage.getItem(USER_ID_KEY) || '';
+      if (!uid) {
+        uid = 'tn_' + Math.random().toString(36).substring(2, 9);
+        localStorage.setItem(USER_ID_KEY, uid);
+      }
+    } catch {
+      uid = 'tn_' + Date.now().toString(36);
     }
 
-    const localRaw = localStorage.getItem(LOCAL_STORAGE_KEY);
     let initialData = { ...DEFAULT_STATE, userId: uid };
-    if (localRaw) {
-      try {
+    try {
+      const localRaw = localStorage.getItem(STUDENT_STORAGE_KEY);
+      if (localRaw) {
         const parsed = JSON.parse(localRaw);
         initialData = {
           ...initialData,
           ...parsed,
           userId: uid,
+          // ensure default muted if not explicitly set
+          audioEnabled: parsed.audioEnabled === true,
           cases: { ...DEFAULT_CASES, ...(parsed.cases || {}) },
         };
-      } catch (e) {
-        console.warn('Failed to parse localStorage cache', e);
       }
+    } catch (e) {
+      console.warn('LocalStorage read note:', e);
     }
 
     setData(initialData);
     setIsInitialized(true);
 
-    // Initial sync from backend
-    if (navigator.onLine) {
-      fetch(`/api/progress/${uid}`)
-        .then((res) => (res.ok ? res.json() : null))
-        .then((resp) => {
-          if (resp?.success && resp?.progress) {
-            setData((prev) => ({
-              ...prev,
-              userName: resp.progress.userName || prev.userName,
-              currentPhase: resp.progress.currentPhase || prev.currentPhase,
-              quizScore: resp.progress.quizScore ?? prev.quizScore,
-              quizSubmitted: resp.progress.quizCompleted ?? prev.quizSubmitted,
-              cases: { ...prev.cases, ...(resp.progress.casesProgress || {}) },
-            }));
+    // Silent background sync check (if hosted with backend, otherwise ignored without error)
+    if (typeof navigator !== 'undefined' && navigator.onLine) {
+      fetch(`/api/health`, { method: 'GET' })
+        .then((res) => {
+          if (res.ok) {
+            setSyncStatus('synced');
+          } else {
+            setSyncStatus('local');
           }
         })
         .catch(() => {
-          // offline or backend not reached
+          // Static hosting (Netlify / GitHub Pages) -> silent fallback to local!
+          setSyncStatus('local');
         });
+    } else {
+      setSyncStatus('offline');
     }
 
-    // Network status listeners
     const handleOnline = () => {
       setIsOnline(true);
-      setSyncStatus('syncing');
-      triggerBackendSync(initialData);
+      setSyncStatus('local');
     };
     const handleOffline = () => {
       setIsOnline(false);
@@ -154,90 +160,92 @@ export function useClassroomSync() {
     };
   }, []);
 
-  // Sync to Backend helper
-  const triggerBackendSync = useCallback(async (stateToSync: ClassroomData) => {
-    if (!navigator.onLine) {
-      setSyncStatus('saved-offline');
-      return;
-    }
-
-    setSyncStatus('syncing');
-    try {
-      const payload = {
-        userId: stateToSync.userId,
-        userName: stateToSync.userName,
-        currentPhase: stateToSync.currentPhase,
-        quizCompleted: stateToSync.quizSubmitted,
-        quizScore: stateToSync.quizScore,
-        casesProgress: stateToSync.cases,
-        answers: {
-          q1: stateToSync.comparisonQ1,
-          q2: stateToSync.comparisonQ2,
-          q3: stateToSync.comparisonQ3,
-          q4: stateToSync.comparisonQ4,
-          toolsChosen: stateToSync.toolsChosen,
-          hesitationPoint: stateToSync.hesitationPoint,
-          ownPvSentences: stateToSync.ownPvSentences,
-          selfCheckReflection: stateToSync.selfCheckReflection,
-        },
-        checklists: {
-          c1: stateToSync.checklistSelf1,
-          c2: stateToSync.checklistSelf2,
-          c3: stateToSync.checklistSelf3,
-        },
-      };
-
-      const res = await fetch(`/api/progress/${stateToSync.userId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.ok) {
-        setSyncStatus('synced');
-      } else {
-        setSyncStatus('error');
-      }
-    } catch {
-      setSyncStatus('saved-offline');
-    }
-  }, []);
-
-  // Update data with debounced backend sync & immediate localStorage save
+  // Update data: immediately saves to localStorage, with silent non-blocking server ping if available
   const updateData = useCallback(
     (updater: Partial<ClassroomData> | ((prev: ClassroomData) => ClassroomData)) => {
       setData((prev) => {
         const next = typeof updater === 'function' ? updater(prev) : { ...prev, ...updater };
         next.lastUpdated = new Date().toISOString();
 
-        // Save immediately to local storage for offline resilience
+        // 1. Save immediately to LocalStorage under 'pv_strafrecht_student_state_v1'
         try {
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(next));
+          localStorage.setItem(STUDENT_STORAGE_KEY, JSON.stringify(next));
         } catch (e) {
-          console.warn('Failed to write to localStorage', e);
+          console.warn('LocalStorage save error:', e);
         }
 
-        // Debounce network sync
-        if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
-        syncTimeoutRef.current = setTimeout(() => {
-          triggerBackendSync(next);
-        }, 800);
+        // 2. Silent optional background telemetry to /api/progress if backend exists (never blocks UI)
+        if (typeof navigator !== 'undefined' && navigator.onLine) {
+          if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
+          syncTimeoutRef.current = setTimeout(() => {
+            fetch(`/api/progress/${next.userId}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userId: next.userId,
+                userName: next.userName,
+                currentPhase: next.currentPhase,
+                quizCompleted: next.quizSubmitted,
+                quizScore: next.quizScore,
+                casesProgress: next.cases,
+                answers: {
+                  q1: next.comparisonQ1,
+                  q2: next.comparisonQ2,
+                  q3: next.comparisonQ3,
+                  q4: next.comparisonQ4,
+                  toolsChosen: next.toolsChosen,
+                  hesitationPoint: next.hesitationPoint,
+                  ownPvSentences: next.ownPvSentences,
+                  selfCheckReflection: next.selfCheckReflection,
+                },
+                checklists: {
+                  c1: next.checklistSelf1,
+                  c2: next.checklistSelf2,
+                  c3: next.checklistSelf3,
+                },
+              }),
+            })
+              .then((res) => {
+                if (res.ok) setSyncStatus('synced');
+              })
+              .catch(() => {
+                // Silent fallback on static hosts (Netlify/GitHub Pages)
+                setSyncStatus('local');
+              });
+          }, 1200);
+        }
 
         return next;
       });
     },
-    [triggerBackendSync]
+    []
   );
 
+  // Reset student device data
   const resetAll = useCallback(() => {
-    if (typeof window !== 'undefined' && window.confirm('Möchten Sie wirklich alle Einträge auf diesem Gerät zurücksetzen?')) {
-      const uid = localStorage.getItem(USER_ID_KEY) || 'user_' + Math.random().toString(36).substring(2, 9);
-      const fresh = { ...DEFAULT_STATE, userId: uid };
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(fresh));
-      setData(fresh);
-      triggerBackendSync(fresh);
+    try {
+      localStorage.removeItem(STUDENT_STORAGE_KEY);
+    } catch {
+      // ignore
     }
-  }, [triggerBackendSync]);
+    const uid = 'tn_' + Math.random().toString(36).substring(2, 9);
+    try {
+      localStorage.setItem(USER_ID_KEY, uid);
+    } catch {
+      // ignore
+    }
+    const fresh: ClassroomData = {
+      ...DEFAULT_STATE,
+      userId: uid,
+      audioEnabled: false,
+    };
+    setData(fresh);
+    try {
+      localStorage.setItem(STUDENT_STORAGE_KEY, JSON.stringify(fresh));
+    } catch {
+      // ignore
+    }
+  }, []);
 
   return {
     data,

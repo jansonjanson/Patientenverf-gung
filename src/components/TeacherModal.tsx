@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Video, Users, RotateCcw, X, Check, AlertCircle, Sparkles } from 'lucide-react';
-import { sounds } from '../utils/audio';
 
 interface TeacherModalProps {
   isOpen: boolean;
@@ -40,10 +39,12 @@ export const TeacherModal: React.FC<TeacherModalProps> = ({
   const [videoSuccess, setVideoSuccess] = useState(false);
   const [stats, setStats] = useState<ClassroomStats | null>(null);
   const [loadingStats, setLoadingStats] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       fetchStats();
+      setConfirmReset(false);
     }
   }, [isOpen]);
 
@@ -56,7 +57,7 @@ export const TeacherModal: React.FC<TeacherModalProps> = ({
         setStats(data);
       }
     } catch {
-      // offline or error
+      // offline or static host fallback
     } finally {
       setLoadingStats(false);
     }
@@ -64,7 +65,6 @@ export const TeacherModal: React.FC<TeacherModalProps> = ({
 
   const handleUnlock = () => {
     if (pin.trim() === '1358') {
-      sounds.playTriumph();
       onToggleTeacherMode(true);
       setPinError(false);
     } else {
@@ -75,29 +75,28 @@ export const TeacherModal: React.FC<TeacherModalProps> = ({
   const handleApplyVideo = () => {
     onUpdateVideoUrl(videoInput);
     setVideoSuccess(true);
-    sounds.playCorrect();
     setTimeout(() => setVideoSuccess(false), 2500);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md no-print animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl text-slate-100 space-y-6 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm no-print animate-in fade-in duration-200">
+      <div className="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl text-slate-800 space-y-6 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div className="flex items-center justify-between border-b border-slate-200 pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 shadow-md">
-              <ShieldCheck className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold shadow-sm">
+              <ShieldCheck className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-extrabold text-white">Dozenten-Cockpit</h3>
-              <p className="text-xs text-slate-400">J. Rosenow (M.A. Pflegepädagogik) • Palliative Care III</p>
+              <h3 className="text-xl font-extrabold text-slate-900">Dozenten-Cockpit</h3>
+              <p className="text-xs text-slate-500">J. Rosenow (M.A. Pflegepädagogik) • Palliative Care III</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -105,12 +104,12 @@ export const TeacherModal: React.FC<TeacherModalProps> = ({
 
         {/* PIN Auth / Active Banner */}
         {!teacherMode ? (
-          <div className="bg-slate-800/80 border border-amber-500/30 rounded-2xl p-5 space-y-3">
+          <div className="bg-amber-50/70 border border-amber-300 rounded-2xl p-5 space-y-3">
             <div className="flex items-start gap-2.5">
-              <Sparkles className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+              <Sparkles className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-bold text-amber-300">Dozenten-Modus aktivieren</h4>
-                <p className="text-xs text-slate-300 mt-1">
+                <h4 className="text-sm font-bold text-amber-900">Dozenten-Modus aktivieren</h4>
+                <p className="text-xs text-amber-800 mt-1">
                   Schalten Sie alle 6 Fall-Musterlösungen frei, binden Sie eigene Lehrvideos ein und sehen Sie Live-Statistiken Ihrer Lerngruppe.
                 </p>
               </div>
@@ -126,117 +125,152 @@ export const TeacherModal: React.FC<TeacherModalProps> = ({
                   setPinError(false);
                 }}
                 onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
-                className="flex-1 px-4 py-2 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                className="flex-1 px-4 py-2 rounded-xl bg-white border border-amber-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
               <button
                 onClick={handleUnlock}
-                className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition shadow"
+                className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider transition shadow-xs cursor-pointer"
               >
                 Freischalten
               </button>
             </div>
             {pinError && (
-              <p className="text-xs text-rose-400 font-semibold flex items-center gap-1.5">
+              <p className="text-xs text-rose-600 font-semibold flex items-center gap-1.5">
                 <AlertCircle className="w-3.5 h-3.5" /> Ungültige PIN. (Hinweis: Die Standard-PIN ist 1358 gemäß § 1358 BGB).
               </p>
             )}
           </div>
         ) : (
-          <div className="bg-emerald-950/40 border border-emerald-500/40 rounded-2xl p-4 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5 text-emerald-300 text-sm font-bold">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              Dozenten-Modus ist aktiv – Alle Musterlösungen & Beamer-Tools freigeschaltet
+          <div className="bg-emerald-50 border border-emerald-300 rounded-2xl p-4 space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5 text-emerald-800 text-sm font-bold">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Dozenten-Modus ist aktiv (PIN 1358 autorisiert)
+              </div>
+              <button
+                onClick={() => onToggleTeacherMode(false)}
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 transition cursor-pointer"
+              >
+                Sperren
+              </button>
             </div>
-            <button
-              onClick={() => onToggleTeacherMode(false)}
-              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
-            >
-              Deaktivieren
-            </button>
+            <div className="pt-2 border-t border-emerald-200 flex flex-wrap items-center justify-between gap-2">
+              <span className="text-xs text-slate-700">
+                Musterlösungen der 6 Fälle für Unterrichtsauswertung / Beamer:
+              </span>
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1.5">
+                <Check className="w-3.5 h-3.5" />
+                Alle 6 Musterlösungen freigeschaltet
+              </span>
+            </div>
           </div>
         )}
 
         {/* Live Classroom Stats */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-bold text-white flex items-center gap-2">
-              <Users className="w-4 h-4 text-blue-400" />
+            <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <Users className="w-4 h-4 text-blue-600" />
               Live Classroom-Übersicht
             </h4>
             <button
               onClick={fetchStats}
               disabled={loadingStats}
-              className="text-xs text-blue-400 hover:text-blue-300"
+              className="text-xs text-blue-600 hover:text-blue-700 font-semibold cursor-pointer"
             >
               {loadingStats ? 'Lade Daten...' : 'Aktualisieren'}
             </button>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-slate-800/60 p-3.5 rounded-2xl border border-slate-700/60 text-center">
-              <div className="text-2xl font-black text-white">{stats?.totalParticipants || 0}</div>
-              <div className="text-[11px] text-slate-400 font-medium mt-0.5">Teilnehmer:innen</div>
+            <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-center">
+              <div className="text-2xl font-black text-slate-900">{stats?.totalParticipants || 0}</div>
+              <div className="text-[11px] text-slate-500 font-medium mt-0.5">Teilnehmer:innen</div>
             </div>
-            <div className="bg-slate-800/60 p-3.5 rounded-2xl border border-slate-700/60 text-center">
-              <div className="text-2xl font-black text-emerald-400">{stats?.quizPassedCount || 0}</div>
-              <div className="text-[11px] text-slate-400 font-medium mt-0.5">Quiz 100% gelöst</div>
+            <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-center">
+              <div className="text-2xl font-black text-emerald-600">{stats?.quizPassedCount || 0}</div>
+              <div className="text-[11px] text-slate-500 font-medium mt-0.5">Quiz 100% gelöst</div>
             </div>
-            <div className="bg-slate-800/60 p-3.5 rounded-2xl border border-slate-700/60 text-center">
-              <div className="text-2xl font-black text-blue-400">{stats?.averageCasesCompleted || '0'}</div>
-              <div className="text-[11px] text-slate-400 font-medium mt-0.5">Ø Fälle bearbeitet</div>
+            <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-center">
+              <div className="text-2xl font-black text-blue-600">{stats?.averageCasesCompleted || '0'}</div>
+              <div className="text-[11px] text-slate-500 font-medium mt-0.5">Ø Fälle bearbeitet</div>
             </div>
-            <div className="bg-slate-800/60 p-3.5 rounded-2xl border border-slate-700/60 text-center">
-              <div className="text-2xl font-black text-amber-400">
+            <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-center">
+              <div className="text-2xl font-black text-amber-600">
                 {stats?.phaseDistribution?.[6] || 0}
               </div>
-              <div className="text-[11px] text-slate-400 font-medium mt-0.5">In Phase 6 (Rechts-Konsil)</div>
+              <div className="text-[11px] text-slate-500 font-medium mt-0.5">In Phase 6 (Rechts-Konsil)</div>
             </div>
           </div>
         </div>
 
         {/* Video Embedding option */}
-        <div className="space-y-3 bg-slate-800/50 p-4 rounded-2xl border border-slate-700/60">
-          <h4 className="text-sm font-bold text-white flex items-center gap-2">
-            <Video className="w-4 h-4 text-purple-400" />
+        <div className="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <Video className="w-4 h-4 text-purple-600" />
             Impuls-Video anpassen / YouTube einbetten
           </h4>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-600">
             Fügen Sie einen beliebigen YouTube-Link ein, um das Video in Schritt 1 direkt im Player einzubetten:
           </p>
           <div className="flex gap-2">
             <input
               type="text"
-              placeholder="https://www.youtube.com/watch?v=..."
+              placeholder="https://youtu.be/..."
               value={videoInput}
               onChange={(e) => setVideoInput(e.target.value)}
-              className="flex-1 px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-3.5 py-2 rounded-xl bg-white border border-slate-300 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
             />
             <button
               onClick={handleApplyVideo}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs"
             >
-              {videoSuccess ? <Check className="w-4 h-4 text-emerald-300" /> : 'Übernehmen'}
+              {videoSuccess ? <Check className="w-4 h-4 text-white" /> : 'Übernehmen'}
             </button>
           </div>
         </div>
 
+        {/* Inline Confirmation for Reset (Replaces window.confirm bug!) */}
+        {confirmReset && (
+          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-300 text-xs text-rose-950 space-y-2 animate-in fade-in">
+            <p className="font-bold">
+              Möchten Sie alle lokalen Daten und Eingaben auf diesem Endgerät wirklich unwiderruflich zurücksetzen?
+            </p>
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => {
+                  onResetAllData();
+                  setConfirmReset(false);
+                  onClose();
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold transition cursor-pointer"
+              >
+                Ja, alles zurücksetzen
+              </button>
+              <button
+                onClick={() => setConfirmReset(false)}
+                className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-semibold transition cursor-pointer"
+              >
+                Abbrechen
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Reset & Close */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-800">
-          <button
-            onClick={() => {
-              if (window.confirm('Möchten Sie die lokalen Daten auf diesem Endgerät zurücksetzen?')) {
-                onResetAllData();
-                onClose();
-              }
-            }}
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-500/10 border border-rose-500/20 transition flex items-center gap-1.5"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            Eigene Eingaben zurücksetzen
-          </button>
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-200">
+          {!confirmReset && (
+            <button
+              onClick={() => setConfirmReset(true)}
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-700 hover:bg-rose-50 border border-rose-300 transition flex items-center gap-1.5 cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Eigene Gerätedaten zurücksetzen
+            </button>
+          )}
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition"
+            className="ml-auto px-5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 border border-slate-300 transition cursor-pointer"
           >
             Schließen
           </button>

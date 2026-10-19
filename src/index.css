@@ -3,39 +3,10 @@
 @layer base {
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
   }
-}
-
-/* Beamer presentation scale mode */
-body.beamer-presentation-mode {
-  font-size: 1.15rem;
-}
-
-body.beamer-presentation-mode h1 {
-  font-size: 2.25rem;
-}
-
-body.beamer-presentation-mode h2 {
-  font-size: 1.85rem;
-}
-
-body.beamer-presentation-mode h3 {
-  font-size: 1.5rem;
-}
-
-/* Custom glassmorphism and gradient cards */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.glass-panel-light {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 /* Print Styles */
@@ -59,15 +30,18 @@ body.beamer-presentation-mode h3 {
   }
 }
 
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(59, 130, 246, 0.8);
-  }
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
-
-.pulse-glow {
-  animation: pulseGlow 2.5s infinite ease-in-out;
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
