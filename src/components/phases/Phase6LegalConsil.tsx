@@ -20,6 +20,7 @@ interface Phase6LegalConsilProps {
   teacherMode: boolean;
   onUpdateCase: (id: number, updater: Partial<CaseState>) => void;
   onPrint: () => void;
+  onCompleteTraining?: () => void;
 }
 
 export const Phase6LegalConsil: React.FC<Phase6LegalConsilProps> = ({
@@ -27,6 +28,7 @@ export const Phase6LegalConsil: React.FC<Phase6LegalConsilProps> = ({
   teacherMode,
   onUpdateCase,
   onPrint,
+  onCompleteTraining,
 }) => {
   const [lockedHintCaseId, setLockedHintCaseId] = useState<number | null>(null);
   const [focusedCaseIndex, setFocusedCaseIndex] = useState<number>(0);
@@ -444,20 +446,29 @@ export const Phase6LegalConsil: React.FC<Phase6LegalConsilProps> = ({
           </p>
         </div>
 
-        <button
-          onClick={onPrint}
-          className="px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shrink-0 shadow-xs transition transform active:scale-95 flex items-center gap-2 cursor-pointer no-print"
-        >
-          <Printer className="w-4 h-4" />
-          <span>Handout / PDF speichern</span>
-        </button>
+        <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 no-print">
+          <button
+            onClick={onCompleteTraining || onPrint}
+            className="px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm tracking-wide shadow-lg shadow-amber-400/40 border-2 border-amber-300 animate-pulse flex items-center gap-2.5 cursor-pointer transform active:scale-95 transition"
+          >
+            <span>🎉 Phase 6 & Gesamtes Training erfolgreich abschließen! ➔</span>
+          </button>
+
+          <button
+            onClick={onPrint}
+            className="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-xs transition transform active:scale-95 flex items-center gap-2 cursor-pointer"
+          >
+            <Printer className="w-4 h-4" />
+            <span>Handout / PDF speichern</span>
+          </button>
+        </div>
       </div>
 
       {/* LITERATURE FOOTER */}
       <div className="bg-slate-100 border border-slate-200 rounded-3xl p-6 text-xs text-slate-600 space-y-2">
         <div className="font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-blue-600" />
-          Literaturverzeichnis (Foliensatz J. Rosenow)
+          Literaturverzeichnis (Fachweiterbildung Palliative Care III)
         </div>
         <p>• Großkopf, V. & Klein, H. (2019a). <em>Recht in Medizin und Pflege.</em> (5. Aufl.). Balingen: Spitta GmbH.</p>
         <p>• Großkopf, V. & Klein, H. (2019b). <em>Vorschriften und Gesetze für das Gesundheitswesen: inkl. Heilkundeübertragungsrichtlinie.</em> (3. Aufl.). Balingen: Spitta GmbH.</p>

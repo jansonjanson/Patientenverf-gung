@@ -389,9 +389,9 @@ export const Phase4LegalFramework: React.FC<Phase4LegalFrameworkProps> = ({ onNe
       <div className="flex justify-end no-print pt-2">
         <button
           onClick={onNextPhase}
-          className="px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm tracking-wide shadow-xs transition transform active:scale-95 flex items-center gap-2 cursor-pointer"
+          className="px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm tracking-wide shadow-lg shadow-amber-400/40 border-2 border-amber-300 animate-pulse flex items-center gap-2.5 cursor-pointer transform active:scale-95 transition"
         >
-          <span>Weiter zu Schritt 5: Eigen-Check Ihrer Verfügung</span>
+          <span>✓ Phase 4 als erledigt markieren & weiter zu Phase 5 ➔</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

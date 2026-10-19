@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import confetti from 'canvas-confetti';
 import { Header } from './components/Header';
 import { PhaseStepper } from './components/PhaseStepper';
 import { Phase1Orientation } from './components/phases/Phase1Orientation';
@@ -52,6 +53,19 @@ export default function App() {
     casesCompletedCount,
   });
 
+  const explicitCompleted = data.completedPhases || [];
+  const allCompletedPhases = Array.from(
+    new Set([...explicitCompleted, ...progressMetrics.completedPhases])
+  );
+
+  const effectivePercentage = Math.min(
+    100,
+    Math.max(
+      progressMetrics.percentage,
+      Math.round((allCompletedPhases.length / 6) * 100)
+    )
+  );
+
   // Check for newly unlocked achievements
   const prevAchievementsCount = React.useRef(0);
   useEffect(() => {
@@ -69,6 +83,26 @@ export default function App() {
 
   const handleSelectPhase = (phaseId: number) => {
     updateData({ currentPhase: phaseId });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCompletePhase = (phaseId: number) => {
+    const currentCompleted = data.completedPhases || [];
+    const nextCompleted = Array.from(new Set([...currentCompleted, phaseId]));
+    const nextPhase = phaseId < 6 ? phaseId + 1 : 6;
+
+    updateData({
+      completedPhases: nextCompleted,
+      currentPhase: nextPhase,
+    });
+
+    confetti({
+      particleCount: 90,
+      spread: 80,
+      origin: { y: 0.6 },
+      colors: ['#f59e0b', '#10b981', '#3b82f6', '#ec4899'],
+    });
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -170,7 +204,7 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white">
       {/* Header */}
       <Header
-        progressPercentage={progressMetrics.percentage}
+        progressPercentage={effectivePercentage}
         syncStatus={syncStatus}
         isOnline={isOnline}
         teacherMode={data.teacherMode}
@@ -183,8 +217,8 @@ export default function App() {
       <PhaseStepper
         currentPhase={data.currentPhase}
         onSelectPhase={handleSelectPhase}
-        completedPhases={progressMetrics.completedPhases}
-        progressPercentage={progressMetrics.percentage}
+        completedPhases={allCompletedPhases}
+        progressPercentage={effectivePercentage}
       />
 
       {/* Main Content Area */}
@@ -196,7 +230,7 @@ export default function App() {
             quizScore={data.quizScore}
             customVideoUrl={data.customVideoUrl}
             onUpdateQuizAnswers={handleUpdateQuizAnswers}
-            onNextPhase={() => handleSelectPhase(2)}
+            onNextPhase={() => handleCompletePhase(1)}
           />
         )}
 
@@ -207,7 +241,7 @@ export default function App() {
             creationInsights={data.creationInsights}
             ownPvSentences={data.ownPvSentences}
             onUpdateField={(field, val) => updateData({ [field]: val })}
-            onNextPhase={() => handleSelectPhase(3)}
+            onNextPhase={() => handleCompletePhase(2)}
           />
         )}
 
@@ -218,12 +252,12 @@ export default function App() {
             q3={data.comparisonQ3}
             q4={data.comparisonQ4}
             onUpdateField={(field, val) => updateData({ [field]: val })}
-            onNextPhase={() => handleSelectPhase(4)}
+            onNextPhase={() => handleCompletePhase(3)}
           />
         )}
 
         {data.currentPhase === 4 && (
-          <Phase4LegalFramework onNextPhase={() => handleSelectPhase(5)} />
+          <Phase4LegalFramework onNextPhase={() => handleCompletePhase(4)} />
         )}
 
         {data.currentPhase === 5 && (
@@ -235,7 +269,7 @@ export default function App() {
             selfCheckReflection={data.selfCheckReflection}
             onUpdateChecklist={(key, val) => updateData({ [key]: val })}
             onUpdateReflection={(val) => updateData({ selfCheckReflection: val })}
-            onNextPhase={() => handleSelectPhase(6)}
+            onNextPhase={() => handleCompletePhase(5)}
           />
         )}
 
@@ -245,6 +279,7 @@ export default function App() {
             teacherMode={data.teacherMode}
             onUpdateCase={handleUpdateCase}
             onPrint={() => setIsPrintModalOpen(true)}
+            onCompleteTraining={() => handleCompletePhase(6)}
           />
         )}
       </main>

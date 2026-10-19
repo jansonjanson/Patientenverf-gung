@@ -438,9 +438,9 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
 
         <button
           onClick={onNextPhase}
-          className="px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs sm:text-sm tracking-wide shrink-0 shadow-sm transition transform active:scale-95 flex items-center gap-2 cursor-pointer no-print"
+          className="px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm tracking-wide shrink-0 shadow-lg shadow-amber-400/40 border-2 border-amber-300 animate-pulse flex items-center gap-2.5 cursor-pointer transform active:scale-95 transition no-print"
         >
-          <span>Weiter zu Schritt 2</span>
+          <span>✓ Phase 1 als verstanden & erledigt bestätigen ➔</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

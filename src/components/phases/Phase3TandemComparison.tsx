@@ -256,9 +256,9 @@ export const Phase3TandemComparison: React.FC<Phase3TandemComparisonProps> = ({
 
         <button
           onClick={onNextPhase}
-          className="px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs sm:text-sm tracking-wide shrink-0 shadow-sm transition transform active:scale-95 flex items-center gap-2 cursor-pointer no-print"
+          className="px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm tracking-wide shrink-0 shadow-lg shadow-amber-400/40 border-2 border-amber-300 animate-pulse flex items-center gap-2.5 cursor-pointer transform active:scale-95 transition no-print"
         >
-          <span>Start DS 2: Rechtlicher Rahmen</span>
+          <span>✓ Phase 3 als erledigt markieren & weiter zu DS 2 ➔</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

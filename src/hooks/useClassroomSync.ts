@@ -35,6 +35,8 @@ export interface ClassroomData {
   selfCheckReflection: string;
   // Step 6
   cases: Record<number, CaseState>;
+  // Explicit completion tracking
+  completedPhases: number[];
   // Global Settings
   audioEnabled: boolean;
   beamerMode: boolean;
@@ -72,6 +74,7 @@ const DEFAULT_STATE: ClassroomData = {
   checklistSelf3: false,
   selfCheckReflection: '',
   cases: DEFAULT_CASES,
+  completedPhases: [],
   audioEnabled: false,
   beamerMode: false,
   teacherMode: false,
