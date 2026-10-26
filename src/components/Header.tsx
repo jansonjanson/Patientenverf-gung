@@ -8,7 +8,6 @@ import {
   BookOpen,
   RotateCcw,
 } from 'lucide-react';
-import { PWAInstallButton } from './PWAInstallButton';
 
 interface HeaderProps {
   progressPercentage: number;
@@ -80,9 +79,6 @@ export const Header: React.FC<HeaderProps> = ({
                 </>
               )}
             </div>
-
-            {/* PWA Install Button */}
-            <PWAInstallButton />
 
             {/* Digitales Gesetzbuch / PDF Handout Button */}
             <button

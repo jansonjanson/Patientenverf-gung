@@ -33,13 +33,13 @@ export const PrintHandoutModal: React.FC<PrintHandoutModalProps> = ({ isOpen, on
   const completed = data.completedPhases || [];
   const isTeacher = Boolean(data.teacherMode);
 
-  // Progressive unlock criteria per section:
-  const isP1Unlocked = isTeacher || completed.includes(1) || data.currentPhase >= 1;
-  const isP2Unlocked = isTeacher || completed.includes(2) || (completed.includes(1) && Boolean(data.toolsChosen || data.hesitationPoint));
-  const isP3Unlocked = isTeacher || completed.includes(3) || (completed.includes(2) && Boolean(data.comparisonQ1));
-  const isP4Unlocked = isTeacher || completed.includes(4) || (completed.includes(3) && data.currentPhase >= 4);
-  const isP5Unlocked = isTeacher || completed.includes(5) || (completed.includes(4) && Boolean(data.selfCheckReflection));
-  const isP6Unlocked = isTeacher || completed.includes(6) || (completed.includes(5) && data.currentPhase >= 6);
+  // Progressive unlock criteria: Only unlocked when phase was completed or teacher mode is active
+  const isP1Unlocked = isTeacher || completed.includes(1);
+  const isP2Unlocked = isTeacher || completed.includes(2);
+  const isP3Unlocked = isTeacher || completed.includes(3);
+  const isP4Unlocked = isTeacher || completed.includes(4);
+  const isP5Unlocked = isTeacher || completed.includes(5);
+  const isP6Unlocked = isTeacher || completed.includes(6);
 
   const unlockedCount = [isP1Unlocked, isP2Unlocked, isP3Unlocked, isP4Unlocked, isP5Unlocked, isP6Unlocked].filter(Boolean).length;
 
@@ -103,77 +103,96 @@ export const PrintHandoutModal: React.FC<PrintHandoutModalProps> = ({ isOpen, on
             </p>
           </div>
 
-          {/* SECTION 0: VIDEO IMPULS LINK & INFORMATION */}
-          <div className="bg-gradient-to-br from-red-50 via-rose-50/40 to-white border-2 border-red-200/90 rounded-2xl p-5 space-y-3 shadow-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-black uppercase tracking-wider text-red-800 flex items-center gap-2">
-                <Video className="w-4 h-4 text-red-600" />
-                <span>0. Fachvideo & Erklär-Impuls</span>
-              </span>
-              <a
-                href={data.customVideoUrl || 'https://youtu.be/Vh1T5booFvY?si=wLR32cqG4ojV-hsW'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-black text-red-700 hover:underline flex items-center gap-1 bg-red-100/80 px-2.5 py-1 rounded-lg border border-red-200"
-              >
-                <span>Video auf YouTube öffnen</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-            <p className="text-xs sm:text-sm text-slate-800 font-bold leading-relaxed">
-              <strong>Titel:</strong> Vorsorgevollmacht, Betreuungsverfügung, Patientenverfügung: Was ist der Unterschied?
-            </p>
-            <p className="text-xs text-slate-600 font-mono">
-              URL: {data.customVideoUrl || 'https://youtu.be/Vh1T5booFvY?si=wLR32cqG4ojV-hsW'}
-            </p>
-          </div>
-
-          {/* SECTION 1: DIE 4 RECHTSINSTRUMENTE (Freigeschaltet ab Phase 1) */}
+          {/* KAPITEL 1: DIE 4 RECHTSINSTRUMENTE & VIDEO-IMPULS (Freigeschaltet ab Phase 1) */}
           <div className="bg-white rounded-3xl border-2 border-blue-200/90 p-6 shadow-xs space-y-4">
             <div className="flex items-center justify-between border-b border-blue-100 pb-3">
               <h2 className="text-lg font-black text-slate-900 flex items-center gap-2.5">
                 <Scale className="w-5 h-5 text-blue-600" />
-                <span>1. Gesetzliche Grundbegriffe: Die 4 Rechtsinstrumente im Vergleich</span>
+                <span>1. Gesetzliche Grundbegriffe & Video-Impuls (Die 4 Rechtsinstrumente)</span>
               </h2>
-              <span className="text-2xs font-extrabold uppercase px-2.5 py-1 rounded-md bg-blue-100 text-blue-900 border border-blue-300">
-                Phase 1
+              <span className={`text-2xs font-extrabold uppercase px-2.5 py-1 rounded-md border ${
+                isP1Unlocked
+                  ? 'bg-blue-100 text-blue-900 border-blue-300'
+                  : 'bg-slate-100 text-slate-600 border-slate-300'
+              }`}>
+                Phase 1 {isP1Unlocked ? '✓ Freigeschaltet' : '🔒 Gesperrt'}
               </span>
             </div>
 
             {isP1Unlocked ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
-                <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-200 space-y-1.5 shadow-2xs">
-                  <h3 className="font-extrabold text-blue-950 text-base">01a. Patientenverfügung (§ 1827 BGB)</h3>
-                  <p className="text-slate-800 font-medium leading-relaxed">
-                    Schriftliche Willenserklärung für künftige Entscheidungsunfähigkeit. Wirkt unmittelbar <em>aus sich heraus</em> gegenüber Ärzt:innen und Pflegenden, sobald von ihr Kenntnis erlangt wurde.
+              <div className="space-y-4">
+                {/* 0. Video Impuls Link & Information */}
+                <div className="bg-gradient-to-br from-red-50 via-rose-50/40 to-white border-2 border-red-200/90 rounded-2xl p-5 space-y-2 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-black uppercase tracking-wider text-red-800 flex items-center gap-2">
+                      <Video className="w-4 h-4 text-red-600" />
+                      <span>0. Fachvideo & Erklär-Impuls</span>
+                    </span>
+                    <a
+                      href={data.customVideoUrl || 'https://youtu.be/Vh1T5booFvY?si=wLR32cqG4ojV-hsW'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-black text-red-700 hover:underline flex items-center gap-1 bg-red-100/80 px-2.5 py-1 rounded-lg border border-red-200"
+                    >
+                      <span>Video auf YouTube öffnen</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-800 font-bold leading-relaxed">
+                    <strong>Titel:</strong> Vorsorgevollmacht, Betreuungsverfügung, Patientenverfügung: Was ist der Unterschied?
+                  </p>
+                  <p className="text-xs text-slate-600 font-mono">
+                    URL: {data.customVideoUrl || 'https://youtu.be/Vh1T5booFvY?si=wLR32cqG4ojV-hsW'}
                   </p>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-indigo-50/80 border border-indigo-200 space-y-1.5 shadow-2xs">
-                  <h3 className="font-extrabold text-indigo-950 text-base">01b. Vorsorgevollmacht (§ 164 ff. BGB)</h3>
-                  <p className="text-slate-800 font-medium leading-relaxed">
-                    Bevollmächtigt eine Vertrauensperson zum <em>Vertreter im Willen</em>. Hat gesetzlichen Vorrang vor einer gerichtlichen Betreuung (§ 1896 Abs. 2 BGB).
-                  </p>
-                </div>
+                {/* Die 4 Rechtsinstrumente Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+                  <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-200 space-y-1.5 shadow-2xs">
+                    <h3 className="font-extrabold text-blue-950 text-base">01a. Patientenverfügung (§ 1827 BGB)</h3>
+                    <p className="text-slate-800 font-medium leading-relaxed">
+                      Schriftliche Willenserklärung für künftige Entscheidungsunfähigkeit. Wirkt unmittelbar <em>aus sich heraus</em> gegenüber Ärzt:innen und Pflegenden, sobald von ihr Kenntnis erlangt wurde.
+                    </p>
+                  </div>
 
-                <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 space-y-1.5 shadow-2xs">
-                  <h3 className="font-extrabold text-amber-950 text-base">01c. Betreuungsverfügung (§ 1896 BGB)</h3>
-                  <p className="text-slate-800 font-medium leading-relaxed">
-                    Wunsch an das Betreuungsgericht zur Auswahl des Betreuers. Rechte sowie Geschäfts- und Einsichtsfähigkeit des Betroffenen bleiben voll bestehen.
-                  </p>
-                </div>
+                  <div className="p-4 rounded-2xl bg-indigo-50/80 border border-indigo-200 space-y-1.5 shadow-2xs">
+                    <h3 className="font-extrabold text-indigo-950 text-base">01b. Vorsorgevollmacht (§ 164 ff. BGB)</h3>
+                    <p className="text-slate-800 font-medium leading-relaxed">
+                      Bevollmächtigt eine Vertrauensperson zum <em>Vertreter im Willen</em>. Hat gesetzlichen Vorrang vor einer gerichtlichen Betreuung (§ 1896 Abs. 2 BGB).
+                    </p>
+                  </div>
 
-                <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200 space-y-1.5 shadow-2xs">
-                  <h3 className="font-extrabold text-emerald-950 text-base">01d. Ehegatten-Notvertretung (§ 1358 BGB)</h3>
-                  <p className="text-slate-800 font-medium leading-relaxed">
-                    Seit 01.01.2023 gesetzliches Notvertretungsrecht bei akuter Bewusstlosigkeit/Krankheit für maximal 6 Monate im Bereich der Gesundheitssorge.
-                  </p>
+                  <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 space-y-1.5 shadow-2xs">
+                    <h3 className="font-extrabold text-amber-950 text-base">01c. Betreuungsverfügung (§ 1896 BGB)</h3>
+                    <p className="text-slate-800 font-medium leading-relaxed">
+                      Wunsch an das Betreuungsgericht zur Auswahl des Betreuers. Rechte sowie Geschäfts- und Einsichtsfähigkeit des Betroffenen bleiben voll bestehen.
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200 space-y-1.5 shadow-2xs">
+                    <h3 className="font-extrabold text-emerald-950 text-base">01d. Ehegatten-Notvertretung (§ 1358 BGB)</h3>
+                    <p className="text-slate-800 font-medium leading-relaxed">
+                      Seit 01.01.2023 gesetzliches Notvertretungsrecht bei akuter Bewusstlosigkeit/Krankheit für maximal 6 Monate im Bereich der Gesundheitssorge.
+                    </p>
+                  </div>
                 </div>
               </div>
             ) : (
-              <div className="p-5 rounded-2xl bg-slate-100 border-2 border-slate-300 text-slate-500 text-xs font-bold flex items-center gap-3">
-                <Lock className="w-5 h-5 text-slate-400" />
-                <span>Kapitel 1 noch nicht freigeschaltet. Absolvieren Sie Phase 1 im Training.</span>
+              <div className="p-6 rounded-2xl bg-slate-100 border-2 border-slate-300 text-slate-600 text-xs sm:text-sm font-bold flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-500 shrink-0">
+                    <Lock className="w-5 h-5 text-slate-500" />
+                  </div>
+                  <div>
+                    <div className="text-slate-900 font-extrabold text-sm sm:text-base">Kapitel 1 noch gesperrt</div>
+                    <div className="text-xs text-slate-500 font-medium mt-0.5">
+                      Spielen Sie Phase 1 (1. Arten & Video) erfolgreich im Training durch und bestätigen Sie den Abschluss-Trigger, um dieses Kapitel im Gesetzbuch freizuschalten.
+                    </div>
+                  </div>
+                </div>
+                <span className="text-2xs uppercase px-2.5 py-1 rounded bg-slate-200 text-slate-600 font-bold shrink-0">
+                  Gesperrt
+                </span>
               </div>
             )}
           </div>

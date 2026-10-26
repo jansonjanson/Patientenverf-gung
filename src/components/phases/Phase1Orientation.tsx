@@ -22,6 +22,7 @@ interface Phase1OrientationProps {
   quizSubmitted: boolean;
   quizScore: number;
   customVideoUrl: string;
+  isCompleted?: boolean;
   onUpdateQuizAnswers: (answers: Record<string, string>, submitted: boolean, score: number) => void;
   onNextPhase: () => void;
 }
@@ -33,6 +34,7 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
   quizSubmitted,
   quizScore,
   customVideoUrl,
+  isCompleted = false,
   onUpdateQuizAnswers,
   onNextPhase,
 }) => {
@@ -312,7 +314,7 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
       />
 
       {/* Interactive Precision Quiz */}
-      <div className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+      <div id="phase1_quiz_step" className="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
@@ -328,9 +330,10 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
 
           <button
             onClick={handleCheckQuiz}
-            className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-xs transition transform active:scale-95 cursor-pointer no-print"
+            className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-xs transition transform active:scale-95 cursor-pointer no-print flex items-center gap-2"
           >
-            Antworten prüfen
+            <span>Antworten prüfen</span>
+            <CheckCircle2 className="w-4 h-4" />
           </button>
         </div>
 
@@ -392,57 +395,120 @@ export const Phase1Orientation: React.FC<Phase1OrientationProps> = ({
 
         {/* Feedback result alert */}
         {feedback.submitted && (
-          <div
-            className={`p-4 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-between gap-3 ${
-              feedback.score === 4
-                ? 'bg-emerald-50 border border-emerald-300 text-emerald-900'
-                : 'bg-amber-50 border border-amber-300 text-amber-900'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              {feedback.score === 4 ? (
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-              ) : (
-                <HelpCircle className="w-5 h-5 text-amber-600 shrink-0" />
+          <div className="space-y-4">
+            <div
+              className={`p-4 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-between gap-3 ${
+                feedback.score === 4
+                  ? 'bg-emerald-50 border border-emerald-300 text-emerald-900'
+                  : 'bg-amber-50 border border-amber-300 text-amber-900'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                {feedback.score === 4 ? (
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                ) : (
+                  <HelpCircle className="w-5 h-5 text-amber-600 shrink-0" />
+                )}
+                <span>
+                  {feedback.score === 4
+                    ? 'Perfekt! Alle 4 juristischen Begriffe wurden fehlerfrei zugeordnet. Ausgezeichnete Vorbereitung für Schritt 2!'
+                    : `${feedback.score} von 4 richtig. Prüfen Sie die rot hervorgehobenen Instrumente noch einmal mit den oberen Vergleichskarten.`}
+                </span>
+              </div>
+              {feedback.score === 4 && (
+                <span className="text-[11px] bg-emerald-100 px-2.5 py-1 rounded-full text-emerald-800 border border-emerald-300 shrink-0">
+                  Badge freigeschaltet!
+                </span>
               )}
-              <span>
-                {feedback.score === 4
-                  ? 'Perfekt! Alle 4 juristischen Begriffe wurden fehlerfrei zugeordnet. Ausgezeichnete Vorbereitung für Schritt 2!'
-                  : `${feedback.score} von 4 richtig. Prüfen Sie die rot hervorgehobenen Instrumente noch einmal mit den oberen Vergleichskarten.`}
-              </span>
             </div>
-            {feedback.score === 4 && (
-              <span className="text-[11px] bg-emerald-100 px-2.5 py-1 rounded-full text-emerald-800 border border-emerald-300">
-                Badge freigeschaltet!
-              </span>
-            )}
+
+            {/* Direct hint to the trigger */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-emerald-50 to-blue-50 border-2 border-amber-300 text-slate-900 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+              <div className="flex items-center gap-2.5">
+                <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
+                <span className="text-xs sm:text-sm font-bold text-slate-800">
+                  Präzisions-Check absolviert! Aktivieren Sie jetzt den Abschluss-Trigger unten, um <strong>Kapitel 1 im Gesetzbuch freizuschalten</strong>.
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const el = document.getElementById('plenum_stopp_1_trigger');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs shadow-xs border border-amber-300 flex items-center gap-1.5 transition shrink-0 cursor-pointer"
+              >
+                <span>Zum Trigger springen ⬇️</span>
+              </button>
+            </div>
           </div>
         )}
       </div>
 
-      {/* PLENUM STOPP 1 */}
-      <div className="bg-amber-50/80 border-2 border-amber-300 rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row items-center justify-between gap-5 shadow-xs">
+      {/* PLENUM STOPP 1 & ABSCHLUSS-TRIGGER */}
+      <div id="plenum_stopp_1_trigger" className="bg-amber-50/90 border-2 border-amber-300 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 text-xl font-black shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 text-xl font-black shrink-0 shadow-xs">
             🛑
           </div>
-          <div>
-            <h4 className="font-extrabold text-amber-900 text-base uppercase tracking-wide">
-              Plenum-Stopp 1: Begriffsschärfung im Kurs
+          <div className="space-y-1.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-2xs font-black uppercase tracking-wider text-amber-950 bg-amber-200/90 border border-amber-400 px-2.5 py-0.5 rounded-full">
+                Abschluss-Trigger • Phase 1
+              </span>
+              {isCompleted ? (
+                <span className="text-2xs font-extrabold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Bereits erledigt & Gesetzbuch aktiv
+                </span>
+              ) : feedback.submitted ? (
+                <span className="text-2xs font-extrabold text-blue-900 bg-blue-100 border border-blue-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                  ✓ Bereit zur Freischaltung
+                </span>
+              ) : (
+                <span className="text-2xs font-bold text-slate-700 bg-slate-200 border border-slate-300 px-2.5 py-0.5 rounded-full">
+                  Schritt 3 (Quiz) noch offen
+                </span>
+              )}
+            </div>
+            <h4 className="font-extrabold text-amber-950 text-base sm:text-lg">
+              Plenum-Stopp 1: Begriffsschärfung im Kurs & Trigger-Aktivierung
             </h4>
-            <p className="text-xs sm:text-sm text-amber-800 mt-1 leading-relaxed max-w-2xl">
-              Bevor Sie gleich in die Online-Generatoren starten, klären wir im Unterrichtsgespräch verbliebene Fragen zu den vier Verfügungsarten. Erst danach geht es weiter zu Schritt 2!
+            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed max-w-2xl font-medium">
+              Bevor Sie gleich in die Online-Generatoren starten, klären wir im Unterrichtsgespräch verbliebene Fragen zu den vier Verfügungsarten. Bestätigen Sie den Abschluss-Trigger, um Phase 1 als erledigt zu markieren und <strong>Kapitel 1 im digitalen Gesetzbuch sichtbar freizuschalten</strong>!
             </p>
           </div>
         </div>
 
-        <button
-          onClick={onNextPhase}
-          className="px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm tracking-wide shrink-0 shadow-lg shadow-amber-400/40 border-2 border-amber-300 animate-pulse flex items-center gap-2.5 cursor-pointer transform active:scale-95 transition no-print"
-        >
-          <span>✓ Phase 1 als verstanden & erledigt bestätigen ➔</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
+        <div className="shrink-0 w-full md:w-auto">
+          {isCompleted ? (
+            <button
+              onClick={onNextPhase}
+              className="w-full md:w-auto px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm tracking-wide shadow-md border-2 border-emerald-400 flex items-center justify-center gap-2.5 cursor-pointer transform active:scale-95 transition no-print"
+            >
+              <span>✓ Phase 1 erledigt • Weiter zu Phase 2 ➔</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          ) : feedback.submitted ? (
+            <button
+              onClick={onNextPhase}
+              className="w-full md:w-auto px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm tracking-wide shadow-xl shadow-amber-400/50 border-2 border-amber-300 animate-pulse flex items-center justify-center gap-2.5 cursor-pointer transform active:scale-95 transition no-print"
+            >
+              <span>✓ Trigger aktivieren & Gesetzbuch freischalten ➔</span>
+              <ArrowRight className="w-4 h-4 text-slate-950" />
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                const el = document.getElementById('phase1_quiz_step');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="w-full md:w-auto px-5 py-3.5 rounded-2xl bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-slate-950 font-bold text-xs sm:text-sm tracking-wide border-2 border-slate-300 hover:border-amber-400 flex items-center justify-center gap-2 cursor-pointer transition no-print"
+              title="Bitte zuerst das Quiz in Schritt 3 lösen & prüfen"
+            >
+              <span>⚠️ Zuerst Schritt 3 (Quiz) lösen & prüfen ⬆️</span>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

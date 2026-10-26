@@ -27,11 +27,11 @@ export default function App() {
   const [showAchievementToast, setShowAchievementToast] = useState<string | null>(null);
   const [gesetzesbuchNotification, setGesetzesbuchNotification] = useState<string | null>(null);
 
-  // Register service worker for offline support
+  // Pure web app (no PWA installation): Unregister any lingering service workers
   useEffect(() => {
-    if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-      navigator.serviceWorker.register('/sw.js').catch((err) => {
-        console.warn('Service worker registration failed:', err);
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((reg) => reg.unregister());
       });
     }
   }, []);
@@ -250,6 +250,7 @@ export default function App() {
             quizSubmitted={data.quizSubmitted}
             quizScore={data.quizScore}
             customVideoUrl={data.customVideoUrl}
+            isCompleted={allCompletedPhases.includes(1)}
             onUpdateQuizAnswers={handleUpdateQuizAnswers}
             onNextPhase={() => handleCompletePhase(1)}
           />
